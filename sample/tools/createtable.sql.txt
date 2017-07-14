@@ -1,0 +1,6 @@
+CREATE DATABASE demo;
+CREATE TABLE simei(id int not null primary key, passwd varchar(10),simeiname varchar(40));
+INSERT INTO simei(id, passwd, simeiname) VALUES(1, '1', '中里　一郎');
+INSERT INTO simei(id, passwd, simeiname) VALUES(2, '2', '中里　次郎');
+INSERT INTO simei(id, passwd, simeiname) VALUES(3, '3', '中里　三郎');
+

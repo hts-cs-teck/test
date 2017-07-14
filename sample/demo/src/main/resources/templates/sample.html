@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Berserker index page</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta charset="UTF-8" />
+<!--   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+      th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}" rel="stylesheet" />
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
+        th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+-->
+<!--jQuery dependencies-->
+ <link rel="stylesheet"
+     href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+  <!--ParamQuery Grid files-->
+  <link rel="stylesheet" th:href="@{/js/grid-2.2.0/pqgrid.min.css}" />
+  <script type="text/javascript" th:src="@{/js/grid-2.2.0/pqgrid.min.js}" ></script>
+</head>
+<body>
+<script>
+$(function(){
+
+//	var data = new Array(1);
+//	data[0] = new Array(3);
+    var data = [
+    	{ id: 1, passwd: '111', simeiname: 'Exxon Mobil'},
+    	{ id: 2, passwd: '112', simeiname: 'Wal-Mart Stores'},
+    	{ id: 3, passwd: '113', simeiname: 'Royal Dutch Shell'},
+    	{ id: 4, passwd: '114', simeiname: 'BP'}
+    ];
+    var obj = {};
+    obj.width = 700;
+    obj.height = 400;
+    obj.colModel = [{title:"ID", dataIndx: "id", width:100, dataType:"integer"},
+        {title:"パスワード", dataIndx: "passwd", width:200, dataType:"string"},
+        {title:"氏名", dataIndx: "simeiname", width:200, dataType:"string"}];
+    obj.dataModel = {data:data};
+    $("#grid_array").pqGrid( obj );
+
+});
+
+function onGetData() {
+	//最小限
+	$.ajax({
+		url: "/simeiFindAll"
+	}).done(function(okdata){ //ajaxの通信に成功した場合
+		alert("success!!");
+	    var data = [
+	    	{ id: 2, passwd: '111', simeiname: 'Exxon Mobil'},
+	    	{ id: 3, passwd: '112', simeiname: 'Wal-Mart Stores'},
+	    	{ id: 4, passwd: '113', simeiname: 'Royal Dutch Shell'},
+	    	{ id: 5, passwd: '114', simeiname: 'BP'}
+	    ];
+	    var aaa = $("#grid_array");
+	    aaa.dataModel = {data:data};
+//	    $("#grid_array").pqGrid( "option", "dataModel", data );
+//		$("#grid_array").pqGrid( { dataModel: { data: data } } );
+	    $("#grid_array").pqGrid( "refresh" );
+	}).fail(function(ngdata){ //ajaxの通信に失敗した場合
+		alert("error!");
+	});
+	return false;
+}
+
+</script>
+<div id="grid_array"></div>
+<button type="button" value="データ取得" onclick="onGetData();"></button>
+</body>
+</html>
