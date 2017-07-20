@@ -5,12 +5,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <p th:text="'Hello, ' + ${name} + '!'" />
+    <p th:text="'イベント ' + ${event.name}"></p>
 
-<form method="post" action="/event">
-  <p>eventid：<input type="text" name="id"/></p>
-  <p><input type="submit" value="Send"/></p>
-</form>
+    <p th:text="'日付     '"></p>
+
+	<table>
+	    <tr th:each="eventDate : ${eventDataList}">
+	        <td th:text="${eventDate.date}"></td>
+	    </tr>
+	</table>
+
 
 </body>
 </html>
