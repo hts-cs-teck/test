@@ -1,6 +1,6 @@
 package com.example.entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="eventDate")
+@Table(name="eventdate")
 public class EventDate {
 
     @Id

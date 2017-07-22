@@ -37,8 +37,8 @@ public class EventDateService {
 	}
 
 	@Transactional(readOnly = true, timeout = 10)
-	public List<EventDate> findByEventId(final Long eventid) {
-		return repository.findByEventId(eventid);
+	public List<EventDate> findByEventid(final Long eventid) {
+		return repository.findByEventid(eventid);
 	}
 
 }
