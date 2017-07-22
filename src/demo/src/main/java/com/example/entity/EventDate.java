@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="eventDate")
+@Table(name="eventdate")
 public class EventDate {
 
     @Id
