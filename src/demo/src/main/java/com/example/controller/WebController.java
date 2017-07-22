@@ -45,7 +45,7 @@ public class WebController {
 				return "ng";
 			}
 			model.addAttribute("name", simei.getSimeiname());
-			return "ok";
+			return "eventList";
 		} catch (Exception e) {
 			model.addAttribute("id", loginChkModel.getId());
 			return "ng";
@@ -59,15 +59,15 @@ public class WebController {
 
 	@RequestMapping(value = "/event")
 	public String EventController(Model model, EventModel eventModel)  {
-		try {
-			Event event = eventService.find(Long.parseLong(eventModel.getId()));
-			if (event == null)
-			{
-				model.addAttribute("id", eventModel.getId());
-				return "ng";
-			}
-			model.addAttribute("event", event);
-
+//		try {
+//			Event event = eventService.find(Long.parseLong(eventModel.getId()));
+//			if (event == null)
+//			{
+//				model.addAttribute("id", eventModel.getId());
+//				return "ng";
+//			}
+//			model.addAttribute("event", event);
+//
 //			List<EventDate> eventDateList = eventDateService.findByEventId(Long.parseLong(eventModel.getId()));
 //			if (eventDateList.isEmpty())
 //			{
@@ -75,13 +75,64 @@ public class WebController {
 //				return "ng";
 //			}
 //			model.addAttribute("eventDataList", eventDateList);
+//			
+//			return "event";
+//		} catch (Exception e) {
+//			model.addAttribute("id", eventModel.getId());
+//			return "ng";
+//		}
+		model.addAttribute("Message","");
+		return "event";
+	}
+
+	@RequestMapping(value = "/registEvent")
+	public String RegistEventController(Model model, EventModel eventModel)  {
+		try {
+			Event event = new Event();
+			event.setName(eventModel.getName());
+			Event eventResult = eventService.save(event);
+			if (eventResult == null)
+			{
+				model.addAttribute("Message","イベント登録に失敗しました");
+				return "event";
+			}			
 			
-			return "event";
+			model.addAttribute("event", eventResult);
+
+			model.addAttribute("Message","イベント登録に成功しました");
+			return "eventUpdate";
 		} catch (Exception e) {
-			model.addAttribute("id", eventModel.getId());
-			return "ng";
+			model.addAttribute("Message","イベント登録に失敗しました");
+			return "event";
 		}
 	}
 
+	@RequestMapping(value = "/updateEvent")
+	public String updateEventController(Model model, EventModel eventModel)  {
+		try {
+			// イベントIDをもらう必要あり
+			// ユーザIDをもらう必要あり
+			Event event = eventService.find(Long.parseLong("9"));
+			if (event == null)
+			{
+				model.addAttribute("Message","イベント更新に失敗しました");
+				return "eventUpdate";
+			}			
+			event.setName(eventModel.getName());
+			Event eventResult = eventService.save(event);
+			if (eventResult == null)
+			{
+				model.addAttribute("Message","イベント更新に失敗しました");
+				return "eventUpdate";
+			}			
+			
+			model.addAttribute("event", eventResult);
 
+			model.addAttribute("Message","イベント更新に成功しました");
+			return "eventUpdate";
+		} catch (Exception e) {
+			model.addAttribute("Message","イベント更新に失敗しました");
+			return "eventUpdate";
+		}
+	}
 }

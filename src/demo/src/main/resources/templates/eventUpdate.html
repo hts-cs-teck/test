@@ -5,13 +5,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <h2>イベント登録</h2>
+    <h2>イベント更新</h2>
     <p style="color: red" th:text="${Message}"></p>
 
-    <form method="post" action="/registEvent">
-		<p>イベント：<input type="text" name="name"/></p>
+    <form method="post" action="/updateEvent">
+    	<p th:text="'イベントID：' + ${event.id}"></p>
+		<p>イベント：<input type="text" name="name" th:field="*{event.name}"/></p>
 
-		<p><input type="submit" value="登録"/></p>
+		<p><input type="submit" value="更新"/></p>
 	</form>
     <form method="post" action="/eventList">
 		<p><input type="submit" value="戻る"/></p>

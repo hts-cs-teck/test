@@ -5,14 +5,24 @@ package com.example.model;
  */
 public class EventModel {
 
-	/** イベントID */
-	private String id;
+	/** イベント名 */
+	private String name;
+	/** コメント */
+	private String comment;
 
-	public String getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }
