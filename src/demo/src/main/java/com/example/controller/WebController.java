@@ -1,11 +1,15 @@
 package com.example.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.entity.Event;
+import com.example.entity.EventDate;
 import com.example.entity.Simei;
 import com.example.model.EventModel;
 import com.example.model.LoginChkModel;
@@ -75,7 +79,7 @@ public class WebController {
 //				return "ng";
 //			}
 //			model.addAttribute("eventDataList", eventDateList);
-//			
+//
 //			return "event";
 //		} catch (Exception e) {
 //			model.addAttribute("id", eventModel.getId());
@@ -95,12 +99,41 @@ public class WebController {
 			{
 				model.addAttribute("Message","イベント登録に失敗しました");
 				return "event";
-			}			
-			
+			}
+
 			model.addAttribute("event", eventResult);
 
+			String strEventDateList = eventModel.getDatelisttext();
+			String[] strEventDate = strEventDateList.split(",");
+
+			for(int i=0;i<strEventDate.length;i++)
+			{
+				EventDate newEventDate = new EventDate();
+				newEventDate.setEventId(eventResult.getId());
+
+				SimpleDateFormat formatA =
+			            new SimpleDateFormat("yyyy/MM/dd");
+				Date date = formatA.parse(strEventDate[i]);
+				newEventDate.setDate(date);
+
+				EventDate eventDateResult = eventDateService.save(newEventDate);
+				if (eventDateResult == null)
+				{
+					model.addAttribute("Message","イベント登録に失敗しました");
+					return "event";
+				}
+			}
+
+//			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+//			if (eventDateList.isEmpty())
+//			{
+//				model.addAttribute("Message","イベント登録に失敗しました");
+//				return "event";
+//			}
+//			model.addAttribute("eventDateList", eventDateList);
+
 			model.addAttribute("Message","イベント登録に成功しました");
-			return "eventUpdate";
+			return "event";
 		} catch (Exception e) {
 			model.addAttribute("Message","イベント登録に失敗しました");
 			return "event";
@@ -110,25 +143,6 @@ public class WebController {
 	@RequestMapping(value = "/updateEvent")
 	public String updateEventController(Model model, EventModel eventModel)  {
 		try {
-			// イベントIDをもらう必要あり
-			// ユーザIDをもらう必要あり
-			Event event = eventService.find(Long.parseLong("9"));
-			if (event == null)
-			{
-				model.addAttribute("Message","イベント更新に失敗しました");
-				return "eventUpdate";
-			}			
-			event.setName(eventModel.getName());
-			Event eventResult = eventService.save(event);
-			if (eventResult == null)
-			{
-				model.addAttribute("Message","イベント更新に失敗しました");
-				return "eventUpdate";
-			}			
-			
-			model.addAttribute("event", eventResult);
-
-			model.addAttribute("Message","イベント更新に成功しました");
 			return "eventUpdate";
 		} catch (Exception e) {
 			model.addAttribute("Message","イベント更新に失敗しました");

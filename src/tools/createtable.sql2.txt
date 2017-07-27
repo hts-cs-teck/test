@@ -1,10 +1,10 @@
 ■テーブル作成
 CREATE TABLE team(id int not null primary key, parentID int references team(id), name varchar(40));
-CREATE TABLE member(id int not null primary key, groupID int references team(id), name varchar(40));
+CREATE TABLE member(id int not null primary key, teamID int references team(id), name varchar(40));
 CREATE TABLE event(id int not null primary key, name varchar(40));
 CREATE TABLE eventDate(id int not null primary key, eventID int references event(id) not null, date date not null, unique(id, date));
-CREATE TABLE eventAttendance(userID int references member(id) not null, eventDateID int references eventDate(id) not null, attendance varchar(10), primary key(userID, eventDateID));
-CREATE TABLE eventComment(userID int references member(id) not null, eventID int references event(id) not null, comment varchar(40), primary key(userID, eventID));
+CREATE TABLE eventAttendance(memberID int references member(id) not null, eventDateID int references eventDate(id) not null, attendance varchar(10), primary key(memberID, eventDateID));
+CREATE TABLE eventComment(memberID int references member(id) not null, eventID int references event(id) not null, comment varchar(40), primary key(memberID, eventID));
 
 ■レコード追加
 INSERT INTO team(id, parentID, name) VALUES(1, NULL, 'カスタマビジネス事業部');
@@ -12,11 +12,12 @@ INSERT INTO team(id, parentID, name) VALUES(2, 1, 'システム1課');
 INSERT INTO team(id, parentID, name) VALUES(3, 1, 'システム2課');
 INSERT INTO team(id, parentID, name) VALUES(4, 1, 'システム3課');
 
-INSERT INTO member(id, groupID, name) VALUES(1, 3, '橋口');
+INSERT INTO member(id, teamID, name) VALUES(1, 3, '橋口');
 INSERT INTO event(id, name) VALUES(1, '8月帰社日');
 INSERT INTO eventDate(id, eventID, date) VALUES(1, 1, '2017/8/10');
-INSERT INTO eventAttendance(userID, eventDateID, attendance) VALUES(1, 1, '○');
-INSERT INTO eventComment(userID, eventID, comment) VALUES(1, 1, '参加予定だよ');
+INSERT INTO eventDate(id, eventID, date) VALUES(2, 1, '2017/8/11');
+INSERT INTO eventAttendance(memberID, eventDateID, attendance) VALUES(1, 1, '○');
+INSERT INTO eventComment(memberID, eventID, comment) VALUES(1, 1, '参加予定だよ');
 
 ■テーブル削除
 drop table eventComment;

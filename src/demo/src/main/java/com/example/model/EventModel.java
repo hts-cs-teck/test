@@ -7,8 +7,8 @@ public class EventModel {
 
 	/** イベント名 */
 	private String name;
-	/** コメント */
-	private String comment;
+	/** 日付 */
+	private String datelisttext;
 
 	public String getName() {
 		return name;
@@ -18,11 +18,11 @@ public class EventModel {
 		this.name = name;
 	}
 
-	public String getComment() {
-		return comment;
+	public String getDatelisttext() {
+		return datelisttext;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setDatelisttext(String datelisttext) {
+		this.datelisttext = datelisttext;
 	}
 }
