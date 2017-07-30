@@ -1,7 +1,9 @@
 package com.example.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,28 +65,6 @@ public class WebController {
 
 	@RequestMapping(value = "/event")
 	public String EventController(Model model, EventModel eventModel)  {
-//		try {
-//			Event event = eventService.find(Long.parseLong(eventModel.getId()));
-//			if (event == null)
-//			{
-//				model.addAttribute("id", eventModel.getId());
-//				return "ng";
-//			}
-//			model.addAttribute("event", event);
-//
-//			List<EventDate> eventDateList = eventDateService.findByEventId(Long.parseLong(eventModel.getId()));
-//			if (eventDateList.isEmpty())
-//			{
-//				model.addAttribute("id", eventModel.getId());
-//				return "ng";
-//			}
-//			model.addAttribute("eventDataList", eventDateList);
-//
-//			return "event";
-//		} catch (Exception e) {
-//			model.addAttribute("id", eventModel.getId());
-//			return "ng";
-//		}
 		model.addAttribute("Message","");
 		return "event";
 	}
@@ -100,8 +80,6 @@ public class WebController {
 				model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
 				return "event";
 			}
-
-			model.addAttribute("event", eventResult);
 
 			String strEventDateList = eventModel.getDatelisttext();
 			String[] strEventDate = strEventDateList.split(",");
@@ -124,16 +102,38 @@ public class WebController {
 				}
 			}
 
-//			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
-//			if (eventDateList.isEmpty())
-//			{
-//				model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
-//				return "event";
-//			}
-//			model.addAttribute("eventDateList", eventDateList);
+			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+			if (eventDateList.isEmpty())
+			{
+				model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
+				return "event";
+			}
+
+			List<String> strDateListResult = new ArrayList<>();
+			String dateListText = new String();
+			for (EventDate eventDate : eventDateList) {
+				SimpleDateFormat formatA =
+		            new SimpleDateFormat("yyyy/MM/dd");
+				String A = formatA.format(eventDate.getDate());
+				strDateListResult.add(A);
+
+				// ˜AŒ‹‚µ‚½•¶š—ñ‚ğ•Û
+				if(dateListText.length() == 0)
+				{
+					dateListText = A;
+				}
+				else
+				{
+					dateListText = dateListText + "," + A;
+				}
+			}
+			
+			model.addAttribute("event", eventResult);
+			model.addAttribute("eventDateList", strDateListResult);
+			model.addAttribute("datelisttext", dateListText);
 
 			model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¬Œ÷‚µ‚Ü‚µ‚½");
-			return "event";
+			return "eventUpdate";
 		} catch (Exception e) {
 			model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
 			return "event";

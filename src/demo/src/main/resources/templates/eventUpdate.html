@@ -9,11 +9,11 @@
 
 <script src="js/event.js" th:src="@{/js/event.js}"></script>
 
-    <h2>イベント更新</h2>
-    <p style="color: red" th:text="${Message}"></p>
+	<h2>イベント更新</h2>
+	<p style="color: red" th:text="${Message}"></p>
 
     <form method="post" action="/updateEvent">
-    	<p th:text="'イベントID：' + ${event.id}"></p>
+		<p th:text="'イベントID：' + ${event.id}"></p>
 		<p>イベント：<input type="text" name="name" th:field="*{event.name}"/></p>
 
 		<select name="year" id="id_year" onchange="dateValidation(this, 'year', 'month', 'day')">
@@ -21,33 +21,37 @@
 		<option value="2017">2017</option>
 		<option value="2018">2018</option>
 		<option value="2019">2019</option>
+		<option value="2020">2020</option>
+		<option value="2021">2021</option>
+		<option value="2022">2022</option>
+		<option value="2023">2023</option>
 		</select>
 		<select name="month" id="id_month" onchange="dateValidation(this, 'year', 'month', 'day')">
 		<option value=""></option>
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
-		<option value="6">6</option>
-		<option value="7">7</option>
-		<option value="8">8</option>
-		<option value="9">9</option>
+		<option value="01">01</option>
+		<option value="02">02</option>
+		<option value="03">03</option>
+		<option value="04">04</option>
+		<option value="05">05</option>
+		<option value="06">06</option>
+		<option value="07">07</option>
+		<option value="08">08</option>
+		<option value="09">09</option>
 		<option value="10">10</option>
 		<option value="11">11</option>
 		<option value="12">12</option>
 		</select>
 		<select name="day" id="id_day" onchange="dateValidation(this, 'year', 'month', 'day')">
 		<option value=""></option>
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
-		<option value="6">6</option>
-		<option value="7">7</option>
-		<option value="8">8</option>
-		<option value="9">9</option>
+		<option value="01">01</option>
+		<option value="02">02</option>
+		<option value="03">03</option>
+		<option value="04">04</option>
+		<option value="05">05</option>
+		<option value="06">06</option>
+		<option value="07">07</option>
+		<option value="08">08</option>
+		<option value="09">09</option>
 		<option value="10">10</option>
 		<option value="11">11</option>
 		<option value="12">12</option>
@@ -74,10 +78,11 @@
 
 		<input type="button" value="候補日追加" onclick="addOption('year', 'month', 'day')" />
 		<select name="datelist" size="5" style="width: 200px">
+			<option th:each="eventDate : ${eventDateList}" th:value="${eventDate}" th:text="${eventDate}"></option>
 		</select>
 		<input type="button" value="候補日削除" onclick="removeOption('year', 'month', 'day')" />
 
-		<p>あとで非表示<input type="text" name="datelistText" style="width: 400px"/></p>
+		<p>あとで非表示に<input type="text" name="datelisttext" th:value="${datelisttext}"/></p>
 		
 		<p><input type="submit" value="更新"/></p>
 	</form>
