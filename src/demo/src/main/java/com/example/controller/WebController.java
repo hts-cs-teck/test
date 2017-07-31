@@ -51,7 +51,7 @@ public class WebController {
 				return "ng";
 			}
 			model.addAttribute("name", simei.getSimeiname());
-			return "eventList";
+			return "forward:eventList";
 		} catch (Exception e) {
 			model.addAttribute("id", loginChkModel.getId());
 			return "ng";
@@ -77,7 +77,7 @@ public class WebController {
 			Event eventResult = eventService.save(event);
 			if (eventResult == null)
 			{
-				model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
+				model.addAttribute("Message","ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸ");
 				return "event";
 			}
 
@@ -97,7 +97,7 @@ public class WebController {
 				EventDate eventDateResult = eventDateService.save(newEventDate);
 				if (eventDateResult == null)
 				{
-					model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
+					model.addAttribute("Message","ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸ");
 					return "event";
 				}
 			}
@@ -105,7 +105,7 @@ public class WebController {
 			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
 			if (eventDateList.isEmpty())
 			{
-				model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
+				model.addAttribute("Message","ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸ");
 				return "event";
 			}
 
@@ -117,7 +117,7 @@ public class WebController {
 				String A = formatA.format(eventDate.getDate());
 				strDateListResult.add(A);
 
-				// ˜AŒ‹‚µ‚½•¶š—ñ‚ğ•Û
+				// é€£çµã—ãŸæ–‡å­—åˆ—ã‚’ä¿æŒ
 				if(dateListText.length() == 0)
 				{
 					dateListText = A;
@@ -132,10 +132,10 @@ public class WebController {
 			model.addAttribute("eventDateList", strDateListResult);
 			model.addAttribute("datelisttext", dateListText);
 
-			model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¬Œ÷‚µ‚Ü‚µ‚½");
+			model.addAttribute("Message","ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ã«æˆåŠŸã—ã¾ã—ãŸ");
 			return "eventUpdate";
 		} catch (Exception e) {
-			model.addAttribute("Message","ƒCƒxƒ“ƒg“o˜^‚É¸”s‚µ‚Ü‚µ‚½");
+			model.addAttribute("Message","ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸ");
 			return "event";
 		}
 	}
@@ -145,7 +145,7 @@ public class WebController {
 		try {
 			return "eventUpdate";
 		} catch (Exception e) {
-			model.addAttribute("Message","ƒCƒxƒ“ƒgXV‚É¸”s‚µ‚Ü‚µ‚½");
+			model.addAttribute("Message","ã‚¤ãƒ™ãƒ³ãƒˆæ›´æ–°ã«å¤±æ•—ã—ã¾ã—ãŸ");
 			return "eventUpdate";
 		}
 	}

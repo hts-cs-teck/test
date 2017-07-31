@@ -13,7 +13,7 @@
     </tr>
     <tr th:each="event:${events}">
       <td th:text="${event.eventDate}">date</td>
-      <td th:text="${event.eventName}">name</td>
+      <td><a th:href="@{'/eventDetail?eventid=' + ${event.eventid}}"><span th:text="${event.eventName}">name</span></a></td>
     </tr>
   </table>
     <form method="post" action="/event">

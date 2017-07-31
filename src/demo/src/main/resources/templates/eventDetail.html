@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>イベント詳細</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h2>イベント詳細</h2>
+    <table class="list" border="1">
+    <tr>
+      <th></th>
+      <th th:each="eventDate:${eventDateList}">
+        <span th:text="${eventDate.date}"></span>
+      </th>
+      <th>コメント</th>
+    </tr>
+    <tr th:each="eventDetail:${eventDetailList}">
+      <td th:text="${eventDetail.name}"></td>
+      <td th:each="attendance:${eventDetail.attendanceList}">
+        <span th:text="${attendance}"></span>
+      </td>
+      <td th:text="${eventDetail.comment}"></td>
+    </tr>
+  </table>
+  <form method="post" action="/eventList">
+    <p><input type="submit" value="戻る"/></p>
+  </form>
+</body>
+</html>

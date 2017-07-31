@@ -34,6 +34,7 @@ public class EventListController {
 
 			for (EventDate eventDate : eventDateList) {
 				EventListDto dto = new EventListDto();
+				dto.setEventid(event.getId());
 				dto.setEventDate(eventDate.getDate());
 				dto.setEventName(event.getName());
 

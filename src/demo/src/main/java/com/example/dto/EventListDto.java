@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class EventListDto implements Serializable {
 
+	/** イベントID */
+	private Long eventid;
 	/** 日付 */
 	private Date eventDate;
 	/** イベント名 */
@@ -22,6 +24,12 @@ public class EventListDto implements Serializable {
 	}
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
+	}
+	public Long getEventid() {
+		return eventid;
+	}
+	public void setEventid(Long eventid) {
+		this.eventid = eventid;
 	}
 
 
