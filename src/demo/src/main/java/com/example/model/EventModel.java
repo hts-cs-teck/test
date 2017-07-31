@@ -5,10 +5,20 @@ package com.example.model;
  */
 public class EventModel {
 
+	/** ID */
+	private String id;
 	/** イベント名 */
 	private String name;
 	/** 日付 */
 	private String datelisttext;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

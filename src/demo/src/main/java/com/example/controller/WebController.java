@@ -69,70 +69,140 @@ public class WebController {
 		return "event";
 	}
 
-	@RequestMapping(value = "/registEvent")
+	@RequestMapping(value = {"/registEvent", "/updateEvent"})
 	public String RegistEventController(Model model, EventModel eventModel)  {
 		try {
+			// イベントの登録or更新
 			Event event = new Event();
+			String id = eventModel.getId();
+			if(id != null)
+			{
+				event.setId(Long.parseLong(id));
+			}
 			event.setName(eventModel.getName());
 			Event eventResult = eventService.save(event);
 			if (eventResult == null)
 			{
-				model.addAttribute("Message","イベント登録に失敗しました");
-				return "event";
-			}
-
-			String strEventDateList = eventModel.getDatelisttext();
-			String[] strEventDate = strEventDateList.split(",");
-
-			for(int i=0;i<strEventDate.length;i++)
-			{
-				EventDate newEventDate = new EventDate();
-				newEventDate.setEventId(eventResult.getId());
-
-				SimpleDateFormat formatA =
-			            new SimpleDateFormat("yyyy/MM/dd");
-				Date date = formatA.parse(strEventDate[i]);
-				newEventDate.setDate(date);
-
-				EventDate eventDateResult = eventDateService.save(newEventDate);
-				if (eventDateResult == null)
+				if(id == null)
 				{
 					model.addAttribute("Message","イベント登録に失敗しました");
 					return "event";
 				}
-			}
-
-			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
-			if (eventDateList.isEmpty())
-			{
-				model.addAttribute("Message","イベント登録に失敗しました");
-				return "event";
-			}
-
-			List<String> strDateListResult = new ArrayList<>();
-			String dateListText = new String();
-			for (EventDate eventDate : eventDateList) {
-				SimpleDateFormat formatA =
-		            new SimpleDateFormat("yyyy/MM/dd");
-				String A = formatA.format(eventDate.getDate());
-				strDateListResult.add(A);
-
-				// 連結した文字列を保持
-				if(dateListText.length() == 0)
-				{
-					dateListText = A;
-				}
 				else
 				{
-					dateListText = dateListText + "," + A;
+					model.addAttribute("Message","イベント更新に失敗しました");
+					return "eventUpdate";
+				}
+			}
+
+			// 候補日の登録or更新
+			{
+				String strEventDateList = eventModel.getDatelisttext();
+				String[] strEventDate = strEventDateList.split(",");
+	
+				// 現在の候補日取得
+				List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+	
+				// 新規候補日の登録
+				for(int i=0;i<strEventDate.length;i++)
+				{
+					boolean hit = false;
+					for (EventDate eventDate : eventDateList) {
+						SimpleDateFormat formatA =
+				            new SimpleDateFormat("yyyy/MM/dd");
+						String A = formatA.format(eventDate.getDate());
+						
+						// 登録済み
+						if(strEventDate[i] == A)
+						{
+							hit = true;
+							continue;
+						}
+					}
+					// 登録済み
+					if(hit == true)
+					{
+						continue;
+					}
+					
+					// 未登録のため登録
+					EventDate newEventDate = new EventDate();
+					newEventDate.setEventId(eventResult.getId());
+	
+					SimpleDateFormat formatA =
+				            new SimpleDateFormat("yyyy/MM/dd");
+					Date date = formatA.parse(strEventDate[i]);
+					newEventDate.setDate(date);
+					
+					EventDate eventDateResult = eventDateService.save(newEventDate);
+					if (eventDateResult == null)
+					{
+						if(id == null)
+						{
+							model.addAttribute("Message","イベント登録に失敗しました");
+							return "event";
+						}
+						else
+						{
+							model.addAttribute("Message","イベント更新に失敗しました");
+							return "eventUpdate";
+						}
+					}
+				}
+	
+				// 既存候補日の削除
+				for (EventDate eventDate : eventDateList) {
+					SimpleDateFormat formatA =
+			            new SimpleDateFormat("yyyy/MM/dd");
+					String A = formatA.format(eventDate.getDate());
+	
+					boolean hit = false;
+					for(int i=0;i<strEventDate.length;i++)
+					{
+						// 登録済み
+						if(strEventDate[i] == A)
+						{
+							hit = true;
+							continue;
+						}
+					}
+					// 登録済み
+					if(hit == true)
+					{
+						continue;
+					}
+				
+					eventDateService.delete(eventDate.getId());
 				}
 			}
 			
+			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+			List<String> strDateListResult = new ArrayList<>();
+			String dateListText = new String();
+			if (!eventDateList.isEmpty())
+			{
+				for (EventDate eventDate : eventDateList) {
+					SimpleDateFormat formatA =
+			            new SimpleDateFormat("yyyy/MM/dd");
+					String A = formatA.format(eventDate.getDate());
+					strDateListResult.add(A);
+	
+					// 連結した文字列を保持
+					if(dateListText.length() == 0)
+					{
+						dateListText = A;
+					}
+					else
+					{
+						dateListText = dateListText + "," + A;
+					}
+				}
+			}
+		
 			model.addAttribute("event", eventResult);
 			model.addAttribute("eventDateList", strDateListResult);
 			model.addAttribute("datelisttext", dateListText);
 
-			model.addAttribute("Message","イベント登録に成功しました");
 			return "eventUpdate";
 		} catch (Exception e) {
 			model.addAttribute("Message","イベント登録に失敗しました");
@@ -140,13 +210,4 @@ public class WebController {
 		}
 	}
 
-	@RequestMapping(value = "/updateEvent")
-	public String updateEventController(Model model, EventModel eventModel)  {
-		try {
-			return "eventUpdate";
-		} catch (Exception e) {
-			model.addAttribute("Message","イベント更新に失敗しました");
-			return "eventUpdate";
-		}
-	}
 }

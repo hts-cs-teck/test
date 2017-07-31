@@ -13,8 +13,8 @@
 	<p style="color: red" th:text="${Message}"></p>
 
     <form method="post" action="/updateEvent">
-		<p th:text="'イベントID：' + ${event.id}"></p>
-		<p>イベント：<input type="text" name="name" th:field="*{event.name}"/></p>
+		<p><input type="hidden" name="id" th:field="*{event.id}"/></p>
+		<p>イベント：<input type="text" name="name" th:field="*{event.name}" onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
 
 		<select name="year" id="id_year" onchange="dateValidation(this, 'year', 'month', 'day')">
 		<option value=""></option>
@@ -82,9 +82,9 @@
 		</select>
 		<input type="button" value="候補日削除" onclick="removeOption('year', 'month', 'day')" />
 
-		<p>あとで非表示に<input type="text" name="datelisttext" th:value="${datelisttext}"/></p>
+		<p><input type="hidden" name="datelisttext" th:value="${datelisttext}"/></p>
 		
-		<p><input type="submit" value="更新"/></p>
+		<p><input type="submit" name="setevent" value="更新"/></p>
 	</form>
     <form method="post" action="/eventList">
 		<p><input type="submit" value="戻る"/></p>

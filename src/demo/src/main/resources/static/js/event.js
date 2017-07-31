@@ -1,3 +1,28 @@
+function fieldChanged()
+{
+//	alert("fieldChanged");
+	var disabled = false;
+	var name = document.getElementsByName("name")[0];
+	var datelisttext = document.getElementsByName("datelisttext")[0];
+//	alert("name.value.length:"+name.value.length);
+//	alert("datelisttext.value.length:"+datelisttext.value.length);
+	if( name.value.length == 0 || datelisttext.value.length == 0 )
+	{
+		disabled = true;
+	}
+	var set = document.getElementsByName("setevent")[0];
+//	alert("disabled:"+disabled);
+	set.disabled = disabled;
+}
+
+window.onload = function(){
+	// ページ読み込み時に実行したい処理
+	// ボタンの活性/非活性を切り替え
+	fieldChanged();
+}
+
+
+
 function dateValidation( element, year, month, day ) {
 	var y = document.getElementsByName( year )[0].value;
 	var m = document.getElementsByName( month )[0].value;
@@ -92,6 +117,9 @@ function addOption( year, month, day ) {
 		{
 			target.value = target.value + "," + date;
 		}
+
+		// ボタンの活性/非活性を切り替え
+		fieldChanged();
 	}
 	else
 	{
@@ -127,6 +155,10 @@ function removeOption() {
 			}
 		}
 		target.value = strNew;
+		
+		// ボタンの活性/非活性を切り替え
+		fieldChanged();
 	}
 }
+
 
