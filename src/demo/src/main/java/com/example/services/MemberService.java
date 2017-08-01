@@ -36,4 +36,8 @@ public class MemberService {
 		repository.delete(id);
 	}
 
+	@Transactional(readOnly = true, timeout = 10)
+	public List<Member> findByName(final String name) {
+		return repository.findByName(name);
+	}
 }

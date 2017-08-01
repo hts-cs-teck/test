@@ -11,6 +11,8 @@ public class EventModel {
 	private String name;
 	/** 日付 */
 	private String datelisttext;
+	/** メンバ */
+	private String[] memberlist;
 
 	public String getId() {
 		return id;
@@ -34,5 +36,13 @@ public class EventModel {
 
 	public void setDatelisttext(String datelisttext) {
 		this.datelisttext = datelisttext;
+	}
+
+	public String[] getMemberlist() {
+		return memberlist;
+	}
+
+	public void setMemberlist(String[] memberlist) {
+		this.memberlist = memberlist;
 	}
 }

@@ -10,13 +10,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.dto.EventDto;
 import com.example.entity.Event;
+import com.example.entity.EventAttendance;
 import com.example.entity.EventDate;
+import com.example.entity.Member;
 import com.example.entity.Simei;
+import com.example.entity.pk.EventAttendancePK;
 import com.example.model.EventModel;
 import com.example.model.LoginChkModel;
+import com.example.services.EventAttendanceService;
 import com.example.services.EventDateService;
 import com.example.services.EventService;
+import com.example.services.MemberService;
 import com.example.services.SimeiService;
 
 @Controller
@@ -30,6 +36,12 @@ public class WebController {
 
 	@Autowired
 	EventDateService eventDateService;
+
+	@Autowired
+	MemberService memberService;
+
+	@Autowired
+	EventAttendanceService eventAttendanceService;
 
 	@RequestMapping(value = "/login")
 	public String LoginController()  {
@@ -66,6 +78,18 @@ public class WebController {
 	@RequestMapping(value = "/event")
 	public String EventController(Model model, EventModel eventModel)  {
 		model.addAttribute("Message","");
+
+		List<Member> memberList = memberService.findAll();
+		List<String> strMemberList = new ArrayList<>();
+		if (!memberList.isEmpty())
+		{
+			for (Member member : memberList) {
+				strMemberList.add(member.getName());
+			}
+		}
+		
+		model.addAttribute("memberList", strMemberList);
+		
 		return "event";
 	}
 
@@ -95,7 +119,7 @@ public class WebController {
 				}
 			}
 
-			// 候補日の登録or更新
+			// 候補日の登録&削除
 			{
 				String strEventDateList = eventModel.getDatelisttext();
 				String[] strEventDate = strEventDateList.split(",");
@@ -113,7 +137,7 @@ public class WebController {
 						String A = formatA.format(eventDate.getDate());
 						
 						// 登録済み
-						if(strEventDate[i] == A)
+						if(strEventDate[i].equals(A))
 						{
 							hit = true;
 							continue;
@@ -176,9 +200,56 @@ public class WebController {
 				}
 			}
 			
+			// メンバの登録&削除
+			String[] memberList = eventModel.getMemberlist();
+			{
+				List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+				
+				for (String member : memberList) {
+					List<Member> memberListDB = memberService.findByName(member);
+					if (memberListDB.size()!=1)
+					{
+						if(id == null)
+						{
+							model.addAttribute("Message","イベント登録に失敗しました");
+							return "event";
+						}
+						else
+						{
+							model.addAttribute("Message","イベント更新に失敗しました");
+							return "eventUpdate";
+						}
+					}
+					Long memberId = memberListDB.get(0).getId();
+					
+					for (EventDate eventDate : eventDateList) {
+						EventAttendance eventAttendance = new EventAttendance();
+						EventAttendancePK eventAttendancePK = new EventAttendancePK();
+						eventAttendancePK.setMemberid(memberId);
+						eventAttendancePK.setEventdateid(eventDate.getId());
+						eventAttendance.setEventAttendancePK(eventAttendancePK);
+						EventAttendance eventAttendanceResult = eventAttendanceService.save(eventAttendance);
+						if (eventAttendanceResult == null)
+						{
+							if(id == null)
+							{
+								model.addAttribute("Message","イベント登録に失敗しました");
+								return "event";
+							}
+							else
+							{
+								model.addAttribute("Message","イベント更新に失敗しました");
+								return "eventUpdate";
+							}
+						}
+					}
+				}
+			}
+			
+			// イベント日付 登録結果の参照
 			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
 			List<String> strDateListResult = new ArrayList<>();
-			String dateListText = new String();
+			String strDateResult = new String();
 			if (!eventDateList.isEmpty())
 			{
 				for (EventDate eventDate : eventDateList) {
@@ -188,20 +259,39 @@ public class WebController {
 					strDateListResult.add(A);
 	
 					// 連結した文字列を保持
-					if(dateListText.length() == 0)
+					if(strDateResult.length() == 0)
 					{
-						dateListText = A;
+						strDateResult = A;
 					}
 					else
 					{
-						dateListText = dateListText + "," + A;
+						strDateResult = strDateResult + "," + A;
 					}
 				}
 			}
 		
+			// メンバ 登録結果の参照
+			List<EventDto> eventDtoList = new ArrayList<>();
+			List<Member> memberListDB = memberService.findAll();
+			for (Member memberDB : memberListDB){
+				boolean hit = false;
+				for (String member : memberList){
+					if(memberDB.getName().equals(member)){
+						hit = true;
+						break;
+					}
+				}
+				
+				EventDto eventDto = new EventDto();
+				eventDto.setName(memberDB.getName());
+				eventDto.setSelected(hit);
+				eventDtoList.add(eventDto);
+			}
+			
 			model.addAttribute("event", eventResult);
 			model.addAttribute("eventDateList", strDateListResult);
-			model.addAttribute("datelisttext", dateListText);
+			model.addAttribute("datelisttext", strDateResult);
+			model.addAttribute("memberList", eventDtoList);
 
 			return "eventUpdate";
 		} catch (Exception e) {

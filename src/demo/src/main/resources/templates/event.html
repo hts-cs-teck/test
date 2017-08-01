@@ -13,8 +13,9 @@
 	<p style="color: red" th:text="${Message}"></p>
 
     <form method="post" action="/registEvent">
-		<p>イベント：<input type="text" name="name"  onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
+		<p>イベント名<input type="text" name="name"  onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
 
+		<p>候補日</p>
 		<select name="year" id="id_year" onchange="dateValidation(this, 'year', 'month', 'day')">
 		<option value=""></option>
 		<option value="2017">2017</option>
@@ -82,6 +83,11 @@
 
 		<p><input type="hidden" name="datelisttext" /></p>
 		
+		<p>メンバ</p>
+		<select id="memberlist" name="memberlist" size="5" style="width: 500px" multiple="multiple" onChange="fieldChanged()">
+			<option th:each="member : ${memberList}" th:value="${member}" th:text="${member}"></option>
+		</select>
+
 		<p><input type="submit" name="setevent" value="登録"/></p>
 	</form>
     <form method="post" action="/eventList">

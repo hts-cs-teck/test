@@ -4,9 +4,22 @@ function fieldChanged()
 	var disabled = false;
 	var name = document.getElementsByName("name")[0];
 	var datelisttext = document.getElementsByName("datelisttext")[0];
+	var memberlist = document.getElementsByName("memberlist")[0];
+	
+	var memberselect = false;
+//	alert("memberlist.length:"+memberlist.length);
+	for (i = 0; i < memberlist.length; i++) {
+//		alert("memberlist[i].selected:"+memberlist[i].selected);
+		if (memberlist[i].selected) {
+			memberselect = true;
+			break;
+		}
+	}
+//	alert("memberselect:"+memberselect);
+	
 //	alert("name.value.length:"+name.value.length);
 //	alert("datelisttext.value.length:"+datelisttext.value.length);
-	if( name.value.length == 0 || datelisttext.value.length == 0 )
+	if( name.value.length == 0 || datelisttext.value.length == 0 || memberselect == false )
 	{
 		disabled = true;
 	}

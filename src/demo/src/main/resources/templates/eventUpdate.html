@@ -14,8 +14,9 @@
 
     <form method="post" action="/updateEvent">
 		<p><input type="hidden" name="id" th:field="*{event.id}"/></p>
-		<p>イベント：<input type="text" name="name" th:field="*{event.name}" onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
+		<p>イベント名<input type="text" name="name" th:field="*{event.name}" onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
 
+		<p>候補日</p>
 		<select name="year" id="id_year" onchange="dateValidation(this, 'year', 'month', 'day')">
 		<option value=""></option>
 		<option value="2017">2017</option>
@@ -84,6 +85,11 @@
 
 		<p><input type="hidden" name="datelisttext" th:value="${datelisttext}"/></p>
 		
+		<p>メンバ</p>
+		<select id="memberlist" name="memberlist" size="5" style="width: 500px" multiple="multiple" onChange="fieldChanged()">
+			<option th:each="member : ${memberList}" th:value="${member.name}" th:text="${member.name}"  th:selected="${member.selected==true}"></option>
+		</select>
+
 		<p><input type="submit" name="setevent" value="更新"/></p>
 	</form>
     <form method="post" action="/eventList">
