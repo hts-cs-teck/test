@@ -84,11 +84,22 @@
 		<input type="button" value="候補日削除" onclick="removeOption('year', 'month', 'day')" />
 
 		<p><input type="hidden" name="datelisttext" th:value="${datelisttext}"/></p>
-		
+
 		<p>メンバ</p>
+<!--
 		<select id="memberlist" name="memberlist" size="5" style="width: 500px" multiple="multiple" onChange="fieldChanged()">
 			<option th:each="member : ${memberList}" th:value="${member.name}" th:text="${member.name}"  th:selected="${member.selected==true}"></option>
 		</select>
+-->
+		<table border="1">
+			<tr th:each="member : ${memberList}">
+				<td th:text="${member.team}"></td>
+				<td th:text="${member.name}"></td>
+				<td>
+					<input type="checkbox" id="memberlist" name="memberlist" th:value="${member.name}" th:checked="${member.selected==true}" onChange="fieldChanged()"/>
+				</td>
+			</tr>
+		</table>
 
 		<p><input type="submit" name="setevent" value="更新"/></p>
 	</form>

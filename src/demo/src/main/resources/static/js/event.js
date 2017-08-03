@@ -4,13 +4,16 @@ function fieldChanged()
 	var disabled = false;
 	var name = document.getElementsByName("name")[0];
 	var datelisttext = document.getElementsByName("datelisttext")[0];
-	var memberlist = document.getElementsByName("memberlist")[0];
+//	var memberlist = document.getElementsByName("memberlist")[0];
+	var memberlist = document.getElementsByName("memberlist");
 	
 	var memberselect = false;
 //	alert("memberlist.length:"+memberlist.length);
 	for (i = 0; i < memberlist.length; i++) {
 //		alert("memberlist[i].selected:"+memberlist[i].selected);
-		if (memberlist[i].selected) {
+//		if (memberlist[i].selected) {	// リストボックス
+//		alert("memberlist[i].checked:"+memberlist[i].checked);
+		if (memberlist[i].checked) {	// チェックボックス
 			memberselect = true;
 			break;
 		}
