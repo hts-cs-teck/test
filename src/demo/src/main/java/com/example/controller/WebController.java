@@ -85,14 +85,11 @@ public class WebController {
 		try {
 			model.addAttribute("Message","");
 
-
 			List<Member> memberList = memberService.findAll();
-	//		List<String> strMemberList = new ArrayList<>();
 			List<EventDto> eventDtoList = new ArrayList<>();
 			if (!memberList.isEmpty())
 			{
 				for (Member member : memberList) {
-	//				strMemberList.add(member.getName());
 
 					Team team = teamService.find(member.getTeamid());
 					if(team == null)
@@ -109,7 +106,6 @@ public class WebController {
 				}
 			}
 
-	//		model.addAttribute("memberList", strMemberList);
 			model.addAttribute("memberList", eventDtoList);
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
@@ -134,12 +130,12 @@ public class WebController {
 				if(id == null)
 				{
 					model.addAttribute("Message","イベント登録に失敗しました");
-					return "event";
+					return "ngEvent";
 				}
 				else
 				{
 					model.addAttribute("Message","イベント更新に失敗しました");
-					return "eventUpdate";
+					return "ngEvent";
 				}
 			}
 
@@ -188,12 +184,52 @@ public class WebController {
 						if(id == null)
 						{
 							model.addAttribute("Message","イベント登録に失敗しました");
-							return "event";
+							return "ngEvent";
 						}
 						else
 						{
 							model.addAttribute("Message","イベント更新に失敗しました");
-							return "eventUpdate";
+							return "ngEvent";
+						}
+					}
+
+					// 出席情報登録
+					String[] memberList = eventModel.getMemberlist();
+					for (String member : memberList) {
+						List<Member> memberListDB = memberService.findByName(member);
+						if (memberListDB.size()!=1)
+						{
+							if(id == null)
+							{
+								model.addAttribute("Message","イベント登録に失敗しました");
+								return "ngEvent";
+							}
+							else
+							{
+								model.addAttribute("Message","イベント更新に失敗しました");
+								return "ngEvent";
+							}
+						}
+						Long memberId = memberListDB.get(0).getId();
+
+						EventAttendance eventAttendance = new EventAttendance();
+						EventAttendancePK eventAttendancePK = new EventAttendancePK();
+						eventAttendancePK.setMemberid(memberId);
+						eventAttendancePK.setEventdateid(eventDateResult.getId());
+						eventAttendance.setEventAttendancePK(eventAttendancePK);
+						EventAttendance eventAttendanceResult = eventAttendanceService.save(eventAttendance);
+						if (eventAttendanceResult == null)
+						{
+							if(id == null)
+							{
+								model.addAttribute("Message","イベント登録に失敗しました");
+								return "ngEvent";
+							}
+							else
+							{
+								model.addAttribute("Message","イベント更新に失敗しました");
+								return "ngEvent";
+							}
 						}
 					}
 				}
@@ -220,6 +256,16 @@ public class WebController {
 						continue;
 					}
 
+					// 出席情報削除
+					List<EventAttendance> eventAttendanceList = eventAttendanceService.findAll();
+					for (EventAttendance eventAttendance : eventAttendanceList) {
+						if(eventAttendance.getEventAttendancePK().getEventdateid() == eventDate.getId())
+						{
+							eventAttendanceService.deleteByPK(eventAttendance.getEventAttendancePK());
+						}
+					}
+
+					// イベント日付削除
 					eventDateService.delete(eventDate.getId());
 				}
 			}
@@ -227,6 +273,7 @@ public class WebController {
 			// メンバの登録&削除
 			String[] memberList = eventModel.getMemberlist();
 			{
+				// 新規追加
 				List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
 
 				for (String member : memberList) {
@@ -236,41 +283,91 @@ public class WebController {
 						if(id == null)
 						{
 							model.addAttribute("Message","イベント登録に失敗しました");
-							return "event";
+							return "ngEvent";
 						}
 						else
 						{
 							model.addAttribute("Message","イベント更新に失敗しました");
-							return "eventUpdate";
+							return "ngEvent";
 						}
 					}
 					Long memberId = memberListDB.get(0).getId();
 
+					// 新規出席情報の追加
 					for (EventDate eventDate : eventDateList) {
-						EventAttendance eventAttendance = new EventAttendance();
-						EventAttendancePK eventAttendancePK = new EventAttendancePK();
-						eventAttendancePK.setMemberid(memberId);
-						eventAttendancePK.setEventdateid(eventDate.getId());
-						eventAttendance.setEventAttendancePK(eventAttendancePK);
 
 						EventAttendance eventAttendanceResult = eventAttendanceService.findByPK(memberId, eventDate.getId());
 						if (eventAttendanceResult == null)
 						{
+							EventAttendance eventAttendance = new EventAttendance();
+							EventAttendancePK eventAttendancePK = new EventAttendancePK();
+							eventAttendancePK.setMemberid(memberId);
+							eventAttendancePK.setEventdateid(eventDate.getId());
+							eventAttendance.setEventAttendancePK(eventAttendancePK);
 							eventAttendanceResult = eventAttendanceService.save(eventAttendance);
 							if (eventAttendanceResult == null)
 							{
 								if(id == null)
 								{
 									model.addAttribute("Message","イベント登録に失敗しました");
-									return "event";
+									return "ngEvent";
 								}
 								else
 								{
 									model.addAttribute("Message","イベント更新に失敗しました");
-									return "eventUpdate";
+									return "ngEvent";
 								}
 							}
 						}
+					}
+				}
+
+				// 削除
+				List<EventAttendance> eventAttendanceList = eventAttendanceService.findAll();
+				for (EventAttendance eventAttendance : eventAttendanceList) {
+					Long eventdateid = eventAttendance.getEventAttendancePK().getEventdateid();
+					Long memberid = eventAttendance.getEventAttendancePK().getMemberid();
+
+					boolean hit = false;
+					for (String member : memberList) {
+						List<Member> memberListDB = memberService.findByName(member);
+						if (memberListDB.size()!=1)
+						{
+							if(id == null)
+							{
+								model.addAttribute("Message","イベント登録に失敗しました");
+								return "ngEvent";
+							}
+							else
+							{
+								model.addAttribute("Message","イベント更新に失敗しました");
+								return "ngEvent";
+							}
+						}
+						if(memberid == memberListDB.get(0).getId())
+						{
+							hit = true;
+							break;
+						}
+					}
+					if(!hit)
+					{
+						eventAttendanceService.delete(memberid, eventdateid);
+						continue;
+					}
+
+					hit = false;
+					for (EventDate eventDate : eventDateList) {
+						if(eventdateid == eventDate.getId())
+						{
+							hit = true;
+							break;
+						}
+					}
+					if(!hit)
+					{
+						eventAttendanceService.delete(memberid, eventdateid);
+						continue;
 					}
 				}
 			}
@@ -315,7 +412,7 @@ public class WebController {
 				if(team == null)
 				{
 					model.addAttribute("Message","登録画面表示失敗");
-					return "event";
+					return "ngEvent";
 				}
 
 				EventDto eventDto = new EventDto();
@@ -332,8 +429,8 @@ public class WebController {
 
 			return "eventUpdate";
 		} catch (Exception e) {
-			model.addAttribute("Message","イベント登録に失敗しました");
-			return "event";
+			model.addAttribute("Message","例外発生");
+			return "ngEvent";
 		}
 	}
 

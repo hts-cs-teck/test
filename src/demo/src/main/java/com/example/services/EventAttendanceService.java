@@ -35,6 +35,11 @@ public class EventAttendanceService {
 		repository.delete(pk);
 	}
 
+	@Transactional(rollbackFor = {Exception.class}, timeout = 3)
+	public void deleteByPK(EventAttendancePK pk) {
+		repository.delete(pk);
+	}
+
 	@Transactional(readOnly = true, timeout = 10)
 	public EventAttendance findByPK(final Long memberid, final Long eventdateid) {
 		EventAttendancePK pk = new EventAttendancePK();
