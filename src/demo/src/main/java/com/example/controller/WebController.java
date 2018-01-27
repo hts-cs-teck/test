@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.dto.EventDto;
+import com.example.dto.TeamDto;
 import com.example.entity.Event;
 import com.example.entity.EventAttendance;
 import com.example.entity.EventDate;
@@ -85,6 +86,7 @@ public class WebController {
 		try {
 			model.addAttribute("Message","");
 
+			// メンバ一覧
 			List<Member> memberList = memberService.findAll();
 			List<EventDto> eventDtoList = new ArrayList<>();
 			if (!memberList.isEmpty())
@@ -101,12 +103,25 @@ public class WebController {
 					EventDto eventDto = new EventDto();
 					eventDto.setTeam(team.getName());
 					eventDto.setName(member.getName());
-					eventDto.setSelected(false);
+//					eventDto.setSelected(false);
 					eventDtoList.add(eventDto);
 				}
 			}
-
 			model.addAttribute("memberList", eventDtoList);
+
+			// 所属一覧
+			List<Team> teamList = teamService.findAll();
+			List<TeamDto> teamDtoList = new ArrayList<>();
+			if (!teamList.isEmpty())
+			{
+				for (Team team : teamList) {
+
+					TeamDto teamDto = new TeamDto();
+					teamDto.setName(team.getName());
+					teamDtoList.add(teamDto);
+				}
+			}
+			model.addAttribute("teamList", teamDtoList);
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
 		}
@@ -328,7 +343,21 @@ public class WebController {
 					Long eventdateid = eventAttendance.getEventAttendancePK().getEventdateid();
 					Long memberid = eventAttendance.getEventAttendancePK().getMemberid();
 
+					// 処理対象イベントの情報かチェック
 					boolean hit = false;
+					for (EventDate eventDate : eventDateList) {
+						if(eventdateid == eventDate.getId())
+						{
+							hit = true;
+							break;
+						}
+					}
+					if(!hit)
+					{
+						continue;
+					}
+					
+					hit = false;
 					for (String member : memberList) {
 						List<Member> memberListDB = memberService.findByName(member);
 						if (memberListDB.size()!=1)
@@ -345,20 +374,6 @@ public class WebController {
 							}
 						}
 						if(memberid == memberListDB.get(0).getId())
-						{
-							hit = true;
-							break;
-						}
-					}
-					if(!hit)
-					{
-						eventAttendanceService.delete(memberid, eventdateid);
-						continue;
-					}
-
-					hit = false;
-					for (EventDate eventDate : eventDateList) {
-						if(eventdateid == eventDate.getId())
 						{
 							hit = true;
 							break;
@@ -397,6 +412,7 @@ public class WebController {
 			}
 
 			// メンバ 登録結果の参照
+			List<EventDto> eventDtoListSelect = new ArrayList<>();
 			List<EventDto> eventDtoList = new ArrayList<>();
 			List<Member> memberListDB = memberService.findAll();
 			for (Member memberDB : memberListDB){
@@ -415,17 +431,41 @@ public class WebController {
 					return "ngEvent";
 				}
 
+				if(hit)
+				{
+					EventDto eventDto = new EventDto();
+					eventDto.setTeam(team.getName());
+					eventDto.setName(memberDB.getName());
+//					eventDto.setSelected(hit);
+					eventDtoListSelect.add(eventDto);
+				}
+				
 				EventDto eventDto = new EventDto();
 				eventDto.setTeam(team.getName());
 				eventDto.setName(memberDB.getName());
-				eventDto.setSelected(hit);
+//				eventDto.setSelected(hit);
 				eventDtoList.add(eventDto);
 			}
 
 			model.addAttribute("event", eventResult);
 			model.addAttribute("eventDateList", strDateListResult);
 			model.addAttribute("datelisttext", strDateResult);
+			model.addAttribute("memberListselect", eventDtoListSelect);
 			model.addAttribute("memberList", eventDtoList);
+
+			// 所属一覧
+			List<Team> teamList = teamService.findAll();
+			List<TeamDto> teamDtoList = new ArrayList<>();
+			if (!teamList.isEmpty())
+			{
+				for (Team team : teamList) {
+
+					TeamDto teamDto = new TeamDto();
+					teamDto.setName(team.getName());
+					teamDtoList.add(teamDto);
+				}
+			}
+			model.addAttribute("teamList", teamDtoList);
 
 			return "eventUpdate";
 		} catch (Exception e) {

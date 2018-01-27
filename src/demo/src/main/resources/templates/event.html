@@ -84,19 +84,70 @@
 		<p><input type="hidden" name="datelisttext" /></p>
 
 		<p>メンバ</p>
+		<table border="1">
+            <thead>
+                <tr>
+                    <td>所属</td>
+                    <td>名前</td>
+                </tr>
+            </thead>
+			<tbody id="tablebody">
+			<tr th:each="member, stat : ${memberListselect}">
+				<td th:text="${member.team}" ></td>
+				<td th:text="${member.name}" ></td>
+				<td>
+    				<input type="button" th:id="${stat.index}" value="削除" onclick="delMember(this)" />
+    				<input type="hidden" id="memberlist" name="memberlist" value="${member.name}" />
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		
+		<p>絞り込み：</p>
+		<table>
+ 			<tbody id="team">
+			<tr>
+				<td th:each="team, stat : ${teamList}">
+					<input type="checkbox" id="teamlist" name="teamlist" th:value="${team.name}" th:text="${team.name}" th:checked="${team.selected==true}" />
+				</td>
+				<td>
+					<input type="button" value="絞り込む" onclick="refine()" />
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		
+		<p>メンバ検索：
+		<input type="text" name="search" />
+		<input type="button" value="絞り込む" onclick="refine()" />
+		<input type="button" value="すべて表示" onclick="refine2()" />
+		</p>
+
 <!--
 		<select id="memberlist" name="memberlist" size="5" style="width: 500px" multiple="multiple" onChange="fieldChanged()">
 			<option th:each="member : ${memberList}" th:value="${member}" th:text="${member}"></option>
 		</select>
 -->
+
 		<table border="1">
-			<tr th:each="member : ${memberList}">
+            <thead>
+                <tr>
+                    <td>所属</td>
+                    <td>名前</td>
+                </tr>
+            </thead>
+			<tbody id="tablebodybase">
+			<tr th:each="member, stat : ${memberList}">
 				<td th:text="${member.team}"></td>
 				<td th:text="${member.name}"></td>
 				<td>
+<!--
 					<input type="checkbox" id="memberlist" name="memberlist" th:value="${member.name}" th:checked="${member.selected==true}" onChange="fieldChanged()"/>
+-->
+					<input type="button" th:id="${stat.index}" value="追加" onclick="addMember(this)" />
 				</td>
 			</tr>
+			</tbody>
 		</table>
 
 		<p><input type="submit" name="setevent" value="登録"/></p>
