@@ -1,6 +1,6 @@
 ■テーブル作成
 CREATE TABLE team(id int not null primary key, parentID int references team(id), name varchar(40));
-CREATE TABLE member(id int not null primary key, teamID int references team(id), name varchar(40));
+CREATE TABLE member(id int not null primary key, passwd varchar(40) , teamID int references team(id), name varchar(40));
 CREATE TABLE event(id int not null primary key, name varchar(40));
 CREATE TABLE eventDate(id int not null primary key, eventID int references event(id) not null, date date not null, unique(id, date));
 CREATE TABLE eventAttendance(memberID int references member(id) not null, eventDateID int references eventDate(id) not null, attendance varchar(10), primary key(memberID, eventDateID));
@@ -12,7 +12,7 @@ INSERT INTO team(id, parentID, name) VALUES(2, 1, 'システム1課');
 INSERT INTO team(id, parentID, name) VALUES(3, 1, 'システム2課');
 INSERT INTO team(id, parentID, name) VALUES(4, 1, 'システム3課');
 
-INSERT INTO member(id, teamID, name) VALUES(1, 3, '橋口');
+INSERT INTO member(id, passwd, teamID, name) VALUES(1, '1', 3, '橋口');
 INSERT INTO event(id, name) VALUES(1, '8月帰社日');
 INSERT INTO eventDate(id, eventID, date) VALUES(1, 1, '2017/8/10');
 INSERT INTO eventDate(id, eventID, date) VALUES(2, 1, '2017/8/11');

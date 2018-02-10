@@ -16,7 +16,6 @@ import com.example.entity.Event;
 import com.example.entity.EventAttendance;
 import com.example.entity.EventDate;
 import com.example.entity.Member;
-import com.example.entity.Simei;
 import com.example.entity.Team;
 import com.example.entity.pk.EventAttendancePK;
 import com.example.model.EventModel;
@@ -25,7 +24,6 @@ import com.example.services.EventAttendanceService;
 import com.example.services.EventDateService;
 import com.example.services.EventService;
 import com.example.services.MemberService;
-import com.example.services.SimeiService;
 import com.example.services.TeamService;
 
 @Controller
@@ -33,9 +31,6 @@ public class WebController {
 
 	@Autowired
 	TeamService teamService;
-
-	@Autowired
-	SimeiService simeiService;
 
 	@Autowired
 	EventService eventService;
@@ -57,18 +52,18 @@ public class WebController {
 	@RequestMapping(value = "/loginchk")
 	public String LoginchkController(Model model, LoginChkModel loginChkModel)  {
 		try {
-			Simei simei = simeiService.find(Long.parseLong(loginChkModel.getId()));
-			if (simei == null)
+			Member member = memberService.find(Long.parseLong(loginChkModel.getId()));
+			if (member == null)
 			{
 				model.addAttribute("id", loginChkModel.getId());
 				return "ng";
 			}
-			if (!simei.getPasswd().equals(loginChkModel.getPasswd()))
+			if (!member.getPasswd().equals(loginChkModel.getPasswd()))
 			{
 				model.addAttribute("id", loginChkModel.getId());
 				return "ng";
 			}
-			model.addAttribute("name", simei.getSimeiname());
+			model.addAttribute("name", member.getName());
 			return "forward:eventList";
 		} catch (Exception e) {
 			model.addAttribute("id", loginChkModel.getId());
