@@ -122,6 +122,9 @@ public class WebController {
 				}
 			}
 			model.addAttribute("teamList", teamDtoList);
+			
+			Event event = new Event();
+			model.addAttribute("event", event);
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
 		}
@@ -134,7 +137,7 @@ public class WebController {
 			// イベントの登録or更新
 			Event event = new Event();
 			String id = eventModel.getId();
-			if(id != null)
+			if(id != "")
 			{
 				event.setId(Long.parseLong(id));
 			}
@@ -467,7 +470,7 @@ public class WebController {
 			}
 			model.addAttribute("teamList", teamDtoList);
 
-			return "eventUpdate";
+			return "event";
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
 			return "ngEvent";

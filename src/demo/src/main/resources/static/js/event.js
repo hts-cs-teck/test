@@ -149,46 +149,53 @@ function addOption( year, month, day ) {
 	var m = document.getElementsByName( month )[0].value;
 	var d = document.getElementsByName( day )[0].value;
 	if ( y && m && d ) {
-		// オプション要素を作成
-		var option = document.createElement("option");
 		// 属性をセット
 		var date = y + '/' + m + '/' + d;
-		option.value = date;
-		option.text = date;
-		// SELECT 要素を name で 取得
-		var target = document.getElementsByName("datelist")[0];
 
-		for (i = 0; i < target.length; i++) {
-			if (target[i].value == date) {
-				alert("該当日は追加済みです");
-				return;
-			}
-		}
-
-		// コレクションに追加
-		target.add(option);
-		// 追加した option を選択
-		target.selectedIndex = target.length-1;
-
-		// 隠しテキストボックスに日付文字列を追加
-		var target = document.getElementsByName("datelisttext")[0];
-		if(target.value == "")
-		{
-			target.value = date;
-		}
-		else
-		{
-			target.value = target.value + "," + date;
-		}
-
-		// ボタンの活性/非活性を切り替え
-		fieldChanged();
+		addDate(date);
 	}
 	else
 	{
 		alert("日付が不正");
 	}
 }
+
+function addDate(date)
+{
+	// オプション要素を作成
+	var option = document.createElement("option");
+	option.value = date;
+	option.text = date;
+	// SELECT 要素を name で 取得
+	var target = document.getElementsByName("datelist")[0];
+
+	for (i = 0; i < target.length; i++) {
+		if (target[i].value == date) {
+			alert("該当日は追加済みです");
+			return;
+		}
+	}
+
+	// コレクションに追加
+	target.add(option);
+	// 追加した option を選択
+	target.selectedIndex = target.length-1;
+
+	// 隠しテキストボックスに日付文字列を追加
+	var target = document.getElementsByName("datelisttext")[0];
+	if(target.value == "")
+	{
+		target.value = date;
+	}
+	else
+	{
+		target.value = target.value + "," + date;
+	}
+
+	// ボタンの活性/非活性を切り替え
+	fieldChanged();
+}
+
 
 function removeOption() {
 	// SELECT 要素を name で 取得
@@ -319,5 +326,12 @@ window.onload = function(){
 	
 	// メンバリストの絞り込み
 	refine();
+	
+	var id = document.getElementsByName("id")[0];
+	if(id.value != "")
+	{
+		var target = document.getElementsByName('setevent')[0];
+		target.value = "更新";
+	}
 }
 

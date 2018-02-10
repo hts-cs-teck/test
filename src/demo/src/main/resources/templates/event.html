@@ -3,19 +3,50 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css" ></link>
+
+	<script src="js/event.js" th:src="@{/js/event.js}"></script>
+
+	<script>
+	$( function() {
+	    $( "#datepicker" ).datepicker({
+	        // 日付が選択された時、日付をリストへセット
+	        onSelect: function(dateText, inst) {
+	        	addDate(dateText);
+	        }
+	    });
+	  } );
+	</script>
+	<style>
+	    .ui-datepicker {
+	        font-size: 50%;
+	    }
+	</style>
+
 </head>
 
 <body>
 
-<script src="js/event.js" th:src="@{/js/event.js}"></script>
-
-	<h2>イベント登録</h2>
+	<h2>イベント編集</h2>
 	<p style="color: red" th:text="${Message}"></p>
 
     <form method="post" action="/registEvent">
-		<p>イベント名<input type="text" name="name"  onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
+		<p><input type="hidden" name="id" th:field="*{event.id}"/></p>
+		<p>イベント名<input type="text" name="name" th:field="*{event.name}" onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
 
 		<p>候補日</p>
+		<select name="datelist" size="5" style="width: 200px">
+			<option th:each="eventDate : ${eventDateList}" th:value="${eventDate}" th:text="${eventDate}"></option>
+		</select>
+		<input type="button" value="候補日削除" onclick="removeOption('year', 'month', 'day')" />
+
+		<p>候補日設定</p>
+		<div id="datepicker"></div>
+
 		<select name="year" id="id_year" onchange="dateValidation(this, 'year', 'month', 'day')">
 		<option value=""></option>
 		<option value="2017">2017</option>
@@ -77,11 +108,8 @@
 		</select>
 
 		<input type="button" value="候補日追加" onclick="addOption('year', 'month', 'day')" />
-		<select name="datelist" size="5" style="width: 200px">
-		</select>
-		<input type="button" value="候補日削除" onclick="removeOption('year', 'month', 'day')" />
 
-		<p><input type="hidden" name="datelisttext" /></p>
+		<p><input type="hidden" name="datelisttext" th:value="${datelisttext}"/></p>
 
 		<p>メンバ</p>
 		<table border="1">
@@ -97,7 +125,7 @@
 				<td th:text="${member.name}" ></td>
 				<td>
     				<input type="button" th:id="${stat.index}" value="削除" onclick="delMember(this)" />
-    				<input type="hidden" id="memberlist" name="memberlist" value="${member.name}" />
+    				<input type="hidden" id="memberlist" name="memberlist" th:value="${member.name}" />
 				</td>
 			</tr>
 			</tbody>
@@ -118,16 +146,10 @@
 		</table>
 		
 		<p>メンバ検索：
-		<input type="text" name="search" />
+		<input type="text" name="search" th:value="${search}" />
 		<input type="button" value="絞り込む" onclick="refine()" />
 		<input type="button" value="すべて表示" onclick="refine2()" />
 		</p>
-
-<!--
-		<select id="memberlist" name="memberlist" size="5" style="width: 500px" multiple="multiple" onChange="fieldChanged()">
-			<option th:each="member : ${memberList}" th:value="${member}" th:text="${member}"></option>
-		</select>
--->
 
 		<table border="1">
             <thead>
