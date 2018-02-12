@@ -81,26 +81,23 @@ public class WebController {
 		try {
 			model.addAttribute("Message","");
 
-			// メンバ一覧
-			List<Member> memberList = memberService.findAll();
+			// メンバ 登録結果の参照
 			List<EventDto> eventDtoList = new ArrayList<>();
-			if (!memberList.isEmpty())
-			{
-				for (Member member : memberList) {
+			List<Member> memberListDB = memberService.findAll();
+			for (Member memberDB : memberListDB){
 
-					Team team = teamService.find(member.getTeamid());
-					if(team == null)
-					{
-						model.addAttribute("Message","登録画面表示失敗");
-						return "event";
-					}
-
-					EventDto eventDto = new EventDto();
-					eventDto.setTeam(team.getName());
-					eventDto.setName(member.getName());
-//					eventDto.setSelected(false);
-					eventDtoList.add(eventDto);
+				Team team = teamService.find(memberDB.getTeamid());
+				if(team == null)
+				{
+					model.addAttribute("Message","登録画面表示失敗");
+					return "ngEvent";
 				}
+
+				EventDto eventDto = new EventDto();
+				eventDto.setTeam(team.getName());
+				eventDto.setName(memberDB.getName());
+//				eventDto.setSelected(hit);
+				eventDtoList.add(eventDto);
 			}
 			model.addAttribute("memberList", eventDtoList);
 
@@ -118,15 +115,92 @@ public class WebController {
 			}
 			model.addAttribute("teamList", teamDtoList);
 			
-			Event event = new Event();
-			model.addAttribute("event", event);
+			String id = eventModel.getId();
+			if(id != null)
+			{
+				Event eventResult = eventService.find(Long.parseLong(id));
+				
+				// イベント日付 登録結果の参照
+				List<EventDate> eventDateList = eventDateService.findByEventid(Long.parseLong(id));
+				List<String> strDateListResult = new ArrayList<>();
+				String strDateResult = new String();
+				List<Long> memberList = new ArrayList<>();
+				if (!eventDateList.isEmpty())
+				{
+					for (EventDate eventDate : eventDateList) {
+						SimpleDateFormat formatA =
+				            new SimpleDateFormat("yyyy/MM/dd");
+						String A = formatA.format(eventDate.getDate());
+						strDateListResult.add(A);
+	
+						// 連結した文字列を保持
+						if(strDateResult.length() == 0)
+						{
+							strDateResult = A;
+						}
+						else
+						{
+							strDateResult = strDateResult + "," + A;
+						}
+
+						// メンバ 登録結果の参照
+						List<EventAttendance> eventAttendanceList = eventAttendanceService.findAll();
+						for (EventAttendance eventAttendance : eventAttendanceList) {
+							Long eventdateid = eventAttendance.getEventAttendancePK().getEventdateid();
+							Long memberid = eventAttendance.getEventAttendancePK().getMemberid();
+							if(eventdateid.equals(eventDate.getId()))
+							{
+								memberList.add(memberid);
+							}
+						}
+					}
+				}
+				
+				List<EventDto> eventDtoListSelect = new ArrayList<>();
+				for (Member memberDB : memberListDB){
+					boolean hit = false;
+					for (Long member : memberList){
+						if(memberDB.getId().equals(member)){
+							hit = true;
+							break;
+						}
+					}
+	
+					Team team = teamService.find(memberDB.getTeamid());
+					if(team == null)
+					{
+						model.addAttribute("Message","登録画面表示失敗");
+						return "ngEvent";
+					}
+	
+					if(hit)
+					{
+						EventDto eventDto = new EventDto();
+						eventDto.setTeam(team.getName());
+						eventDto.setName(memberDB.getName());
+	//					eventDto.setSelected(hit);
+						eventDtoListSelect.add(eventDto);
+					}
+					
+				}
+	
+				model.addAttribute("event", eventResult);
+				model.addAttribute("eventDateList", strDateListResult);
+				model.addAttribute("datelisttext", strDateResult);
+				model.addAttribute("memberListselect", eventDtoListSelect);
+			}
+			else
+			{
+				Event event = new Event();
+				model.addAttribute("event", event);
+			}
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
 		}
 		return "event";
 	}
 
-	@RequestMapping(value = {"/registEvent", "/updateEvent"})
+	@RequestMapping(value = {"/registEvent"})
 	public String RegistEventController(Model model, EventModel eventModel)  {
 		try {
 			// イベントの登録or更新
@@ -272,7 +346,8 @@ public class WebController {
 					// 出席情報削除
 					List<EventAttendance> eventAttendanceList = eventAttendanceService.findAll();
 					for (EventAttendance eventAttendance : eventAttendanceList) {
-						if(eventAttendance.getEventAttendancePK().getEventdateid() == eventDate.getId())
+						Long eventdateid = eventAttendance.getEventAttendancePK().getEventdateid();
+						if(eventdateid.equals(eventDate.getId()))
 						{
 							eventAttendanceService.deleteByPK(eventAttendance.getEventAttendancePK());
 						}
@@ -344,7 +419,7 @@ public class WebController {
 					// 処理対象イベントの情報かチェック
 					boolean hit = false;
 					for (EventDate eventDate : eventDateList) {
-						if(eventdateid == eventDate.getId())
+						if(eventdateid.equals(eventDate.getId()))
 						{
 							hit = true;
 							break;
@@ -371,7 +446,7 @@ public class WebController {
 								return "ngEvent";
 							}
 						}
-						if(memberid == memberListDB.get(0).getId())
+						if(memberid.equals(memberListDB.get(0).getId()))
 						{
 							hit = true;
 							break;

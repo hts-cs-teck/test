@@ -14,9 +14,15 @@
     <tr th:each="event:${events}">
       <td th:text="${event.eventDate}">date</td>
       <td><a th:href="@{'/eventDetail?eventid=' + ${event.eventid}}"><span th:text="${event.eventName}">name</span></a></td>
+		<td>
+	      	<form method="post" th:action="@{'/event?id=' + ${event.eventid}}">
+				<input type="submit" value="編集"/>
+			</form>
+		</td>
     </tr>
-  </table>
-    <form method="post" action="/event">
+    </table>
+    
+	<form method="post" action="/event">
 		<p><input type="submit" value="イベント登録"/></p>
 	</form>
 </body>

@@ -77,9 +77,9 @@ function dateValidation( element, year, month, day ) {
 ////	  optionLoop(1, 31, 'id_day', this_day);
 //})();
 
-function addMember( targetEle ) {
+function addMember( dataIx ) {
 
-    var dataIx = targetEle.id;
+//    var dataIx = targetEle.id;
 	var baseTbl = document.getElementById('tablebodybase');
 	var baseTr = baseTbl.getElementsByTagName('tr')[dataIx];
 	var baseTeam = baseTr.cells[0];
@@ -94,7 +94,7 @@ function addMember( targetEle ) {
         if( cells[0].innerHTML == baseTeam.innerHTML &&
         	cells[1].innerHTML == baseName.innerHTML )
         {
-			alert("該当メンバは追加済みです");
+//			alert("該当メンバは追加済みです");
 			return;
         }
     }
@@ -113,7 +113,7 @@ function addMember( targetEle ) {
     delJs.value = "削除";
     delJs.id = target.rows.length -1;
     delJs.addEventListener('click', function(){
-    	delMember(this);
+    	delMember(this.id);
     });
     delJsTd.appendChild(delJs);
 
@@ -127,9 +127,9 @@ function addMember( targetEle ) {
     fieldChanged()
 }
 
-function delMember( targetEle ) {
+function delMember( dataIx ) {
 
-	var dataIx = targetEle.id;
+//	var dataIx = targetEle.id;
 
 	var baseTbl = document.getElementById('tablebody');
 	baseTbl.deleteRow(dataIx);
@@ -317,6 +317,45 @@ function allDisplay()
 		target.rows[ i ].style.display = "";
 	}
 }
+
+function preset()
+{
+	var teamlist = document.getElementsByName("teamlistPreset");
+
+	var teamselect = false;
+	for (i = 0; i < teamlist.length; i++) {
+		if (teamlist[i].checked) {	// チェックボックス
+			teamselect = true;
+			break;
+		}
+	}
+	
+	if(teamselect)
+	{
+		var target = document.getElementById('tablebodybase');
+		for( var i = 0; i < target.rows.length; i++ )
+		{
+			var cells = target.rows[ i ].cells;
+		
+		    var team = cells[0].innerHTML;
+
+		    var hit = false;
+		    for (j = 0; j < teamlist.length; j++)
+		    {
+		    	if(team == teamlist[j].value)
+		    	{
+		    		if(teamlist[j].checked == true)
+		    		{
+		    			addMember( i );
+			    		hit = true;
+		    		}
+		    		break;
+		    	}
+		    }
+		}
+	}
+}
+
 
 
 window.onload = function(){

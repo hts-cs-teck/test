@@ -124,17 +124,33 @@
 				<td th:text="${member.team}" ></td>
 				<td th:text="${member.name}" ></td>
 				<td>
-    				<input type="button" th:id="${stat.index}" value="削除" onclick="delMember(this)" />
+    				<input type="button" th:id="${stat.index}" value="削除" onclick="delMember(this.id)" />
     				<input type="hidden" id="memberlist" name="memberlist" th:value="${member.name}" />
 				</td>
 			</tr>
 			</tbody>
 		</table>
 		
-		<p>絞り込み：</p>
+		<p></p>
 		<table>
  			<tbody id="team">
 			<tr>
+				<td>プリセット：</td>
+				<td th:each="team, stat : ${teamList}">
+					<input type="checkbox" id="teamlistPreset" name="teamlistPreset" th:value="${team.name}" th:text="${team.name}" th:checked="${team.selected==true}" />
+				</td>
+				<td>
+					<input type="button" value="追加" onclick="preset()" />
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<p></p>
+		<table>
+ 			<tbody id="team">
+			<tr>
+				<td>絞り込み：</td>
 				<td th:each="team, stat : ${teamList}">
 					<input type="checkbox" id="teamlist" name="teamlist" th:value="${team.name}" th:text="${team.name}" th:checked="${team.selected==true}" />
 				</td>
@@ -166,7 +182,7 @@
 <!--
 					<input type="checkbox" id="memberlist" name="memberlist" th:value="${member.name}" th:checked="${member.selected==true}" onChange="fieldChanged()"/>
 -->
-					<input type="button" th:id="${stat.index}" value="追加" onclick="addMember(this)" />
+					<input type="button" th:id="${stat.index}" value="追加" onclick="addMember(this.id)" />
 				</td>
 			</tr>
 			</tbody>
