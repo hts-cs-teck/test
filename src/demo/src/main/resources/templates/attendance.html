@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>出欠登録</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h2>出欠登録</h2>
+
+    <table class="list" border="1">
+    <tr>
+      <td th:text="${attendance.eventName}">イベント名</td>
+    </tr>
+    <tr>
+      <td>開催日時：<span th:text="${attendance.eventDate}">YYYY/MM/DD HH:MM</span></td>
+    </tr>
+    <tr>
+      <td th:text="${attendance.eventPlace}">開催場所</td>
+    </tr>
+    <tr>
+      <td>コメント：<span th:text="${attendance.eventComment}">特記事項あれば</span></td>
+    </tr>
+    </table>
+
+    <br/>
+    <span th:text="${attendance.memberName}">○○</span>さんの出欠を登録します。
+    <br/>
+
+    <form method="post" action="/regist" th:form="${attendanceModel}">
+    <table class="list" border="1">
+    <tr>
+      <th>日付</th>
+      <th>出欠</th>
+    </tr>
+	<tr th:each="eventDate:${eventDateList}">
+      <td th:text="${eventDate.date}">date</td>
+      <td>
+        <input type="radio" th:each="item : ${attendanceModel.selectAttendance}" th:field="${attendanceModel.attendances[__${eventDate.id}__]}" th:value="${item.key}" th:text="${item.value}" />
+        <input type="hidden" name="eventdateid" th:value="${eventDate.id}" />
+      </td>
+    </tr>
+    </table>
+
+    <br/>
+    <span>コメント</span>
+    <br/>
+    <textarea th:field="${attendanceModel.comment}"></textarea>
+
+    <p><input type="submit" value="出欠登録"/></p>
+
+    <input type="hidden" name="eventid" th:value="${attendance.eventid}" />
+    <input type="hidden" name="memberid" th:value="${attendance.memberid}" />
+
+    </form>
+</body>
+</html>

@@ -47,4 +47,9 @@ public class EventAttendanceService {
 		pk.setEventdateid(eventdateid);
 		return repository.findOne(pk);
 	}
+
+	@Transactional(readOnly = true, timeout = 10)
+	public List<EventAttendance> findByMemberIdAndEventId(final Long memberid, final Long eventid) {
+		return repository.findByMemberidAndEventid(memberid, eventid);
+	}
 }
