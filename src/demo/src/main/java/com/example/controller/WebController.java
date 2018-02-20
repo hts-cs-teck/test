@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,14 +22,19 @@ import com.example.entity.Team;
 import com.example.entity.pk.EventAttendancePK;
 import com.example.model.EventModel;
 import com.example.model.LoginChkModel;
+import com.example.model.SessionModel;
 import com.example.services.EventAttendanceService;
 import com.example.services.EventDateService;
 import com.example.services.EventService;
 import com.example.services.MemberService;
 import com.example.services.TeamService;
+import com.example.utils.StringUtil;
 
 @Controller
 public class WebController {
+
+	@Autowired
+	protected SessionModel sessionModel;
 
 	@Autowired
 	TeamService teamService;
@@ -64,6 +71,12 @@ public class WebController {
 				return "ng";
 			}
 			model.addAttribute("name", member.getName());
+
+			sessionModel.setId(member.getId());
+			sessionModel.setSimei(member.getName());
+
+			model.addAttribute("sessionModel", sessionModel);
+
 			return "forward:eventList";
 		} catch (Exception e) {
 			model.addAttribute("id", loginChkModel.getId());
@@ -74,6 +87,13 @@ public class WebController {
 	@RequestMapping(value = "/sample")
 	public String SampleController()  {
 		return "sample";
+	}
+
+	@RequestMapping(value = "/logout")
+	public String LogoutController(HttpSession session) {
+		// dummy spring security を使うべき ...
+		session.invalidate();
+		return "login";
 	}
 
 	@RequestMapping(value = "/event")
@@ -114,12 +134,12 @@ public class WebController {
 				}
 			}
 			model.addAttribute("teamList", teamDtoList);
-			
+
 			String id = eventModel.getId();
-			if(id != null)
+			if(!StringUtil.isNullOrEmpty(id))
 			{
 				Event eventResult = eventService.find(Long.parseLong(id));
-				
+
 				// イベント日付 登録結果の参照
 				List<EventDate> eventDateList = eventDateService.findByEventid(Long.parseLong(id));
 				List<String> strDateListResult = new ArrayList<>();
@@ -132,7 +152,7 @@ public class WebController {
 				            new SimpleDateFormat("yyyy/MM/dd");
 						String A = formatA.format(eventDate.getDate());
 						strDateListResult.add(A);
-	
+
 						// 連結した文字列を保持
 						if(strDateResult.length() == 0)
 						{
@@ -155,7 +175,7 @@ public class WebController {
 						}
 					}
 				}
-				
+
 				List<EventDto> eventDtoListSelect = new ArrayList<>();
 				for (Member memberDB : memberListDB){
 					boolean hit = false;
@@ -165,14 +185,14 @@ public class WebController {
 							break;
 						}
 					}
-	
+
 					Team team = teamService.find(memberDB.getTeamid());
 					if(team == null)
 					{
 						model.addAttribute("Message","登録画面表示失敗");
 						return "ngEvent";
 					}
-	
+
 					if(hit)
 					{
 						EventDto eventDto = new EventDto();
@@ -181,9 +201,9 @@ public class WebController {
 	//					eventDto.setSelected(hit);
 						eventDtoListSelect.add(eventDto);
 					}
-					
+
 				}
-	
+
 				model.addAttribute("event", eventResult);
 				model.addAttribute("eventDateList", strDateListResult);
 				model.addAttribute("datelisttext", strDateResult);
@@ -194,6 +214,7 @@ public class WebController {
 				Event event = new Event();
 				model.addAttribute("event", event);
 			}
+			model.addAttribute("sessionModel", sessionModel);
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
 		}
@@ -429,7 +450,7 @@ public class WebController {
 					{
 						continue;
 					}
-					
+
 					hit = false;
 					for (String member : memberList) {
 						List<Member> memberListDB = memberService.findByName(member);
@@ -512,7 +533,7 @@ public class WebController {
 //					eventDto.setSelected(hit);
 					eventDtoListSelect.add(eventDto);
 				}
-				
+
 				EventDto eventDto = new EventDto();
 				eventDto.setTeam(team.getName());
 				eventDto.setName(memberDB.getName());
@@ -539,6 +560,8 @@ public class WebController {
 				}
 			}
 			model.addAttribute("teamList", teamDtoList);
+
+			model.addAttribute("sessionModel", sessionModel);
 
 			return "event";
 		} catch (Exception e) {

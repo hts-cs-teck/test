@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.dto.EventListDto;
 import com.example.entity.Event;
 import com.example.entity.EventDate;
+import com.example.model.SessionModel;
 import com.example.services.EventDateService;
 import com.example.services.EventService;
 
 @Controller
 public class EventListController {
+
+	@Autowired
+	protected SessionModel sessionModel;
 
 	@Autowired
 	private EventService eventService;
@@ -43,6 +47,8 @@ public class EventListController {
 		}
 
 		model.addAttribute("events", list);
+
+		model.addAttribute("sessionModel", sessionModel);
 
 		return "eventList";
 	}

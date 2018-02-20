@@ -5,6 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+	<form method="post" action="logout">
+		<p th:text="${sessionModel.simei}" style="display: inline"/>
+		<input type="submit" value="ログアウト"/>
+	</form>
+
     <h2>出欠登録</h2>
 
     <table class="list" border="1">

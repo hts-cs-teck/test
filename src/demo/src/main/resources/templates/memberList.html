@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>メンバー一覧</title>
+</head>
+
+<script src="js/event.js" th:src="@{/js/event.js}"></script>
+
+<script>
+alert(${teams[0]}.name);
+window.onload=function(){
+	alert(${teams[0]}.getName());
+/* 	for(var ab in ${teams}){
+	alert(ab.getName());
+
+	var div_element = document.createElement("input");
+	div_element.setAttribute("type","radio");
+	div_element.setAttribute("name","dep");
+	div_element.setAttribute("value","AAA");
+	var parent_object = document.getElementById("Search");
+	parent_object.appendChild(div_element);
+	} */
+}
+</script>
+
+<body>
+	<form method="post" action="logout">
+		<p th:text="${sessionModel.simei}" style="display: inline"/>
+		<input type="submit" value="ログアウト"/>
+	</form>
+
+	<div id="header"></div>
+
+	<div style="width: 90%">
+		<br /> メンバー一覧
+
+		<div>
+			<form method="post" action="/memberEdit">
+				<button>メンバー追加</button>
+			</form>
+			<form method="post" action="/eventList" style="float: right">
+				<button>トップに戻る</button>
+			</form>
+		</div>
+
+		<br />
+
+		<div>
+			<form method="post" action="/member">
+<!--
+				<p id="Search">
+					絞込： <input type="radio" name="searchTeam" value="1"
+						checked="checked" />CS事業部 <input type="radio" name="searchTeam"
+						value="2" />SB事業部
+				</p>
+-->
+			<p>チーム
+				<select name="steamid" id="steamid">
+					<option value=""></option>
+					<option th:each="team:${teamList}" th:value="${team.id}" th:selected="${team.id} == ${conditions.steamid}" th:inline="text">[[${team.name}]]</option>
+				</select>
+				<input type="checkbox" name="schild" id="schild" value="1" th:checked="${conditions.schild} != null"/>階層検索
+
+			</p>
+
+				<span> メンバー検索 <input type="text" name="sname" id="sname" />
+				</span> <span style="float: right">
+					<button>検索</button>
+				</span>
+			</form>
+			<br /> <br />
+
+			<table style="width: 80%" border="1">
+				<tr>
+					<td colspan="3">検索結果一覧</td>
+				</tr>
+				<tr>
+					<td style="width: 40%">名前</td>
+					<td style="width: 40%">所属</td>
+					<td style="width: 10%"></td>
+				</tr>
+				<tr th:each="memberlist:${members}">
+					<td th:text="${memberlist.name}"></td>
+					<td th:text="${memberlist.teamName}"></td>
+					<td>
+						<form method="post" action="/memberEdit">
+							<button style="width: 100%">編集</button>
+						</form>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+		<form method="post" action="/eventList">
+			<div align="right">
+				<button>トップに戻る</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

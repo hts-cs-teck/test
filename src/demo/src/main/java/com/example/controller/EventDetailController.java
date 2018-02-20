@@ -14,6 +14,7 @@ import com.example.entity.EventComment;
 import com.example.entity.EventDate;
 import com.example.entity.Member;
 import com.example.model.EventDetailModel;
+import com.example.model.SessionModel;
 import com.example.services.EventAttendanceService;
 import com.example.services.EventCommentService;
 import com.example.services.EventDateService;
@@ -21,6 +22,9 @@ import com.example.services.MemberService;
 
 @Controller
 public class EventDetailController {
+
+	@Autowired
+	protected SessionModel sessionModel;
 
 	@Autowired
 	private EventDateService eventDateService;
@@ -73,6 +77,8 @@ public class EventDetailController {
 
 		model.addAttribute("eventDateList", eventDateList);
 		model.addAttribute("eventDetailList", eventDetailList);
+
+		model.addAttribute("sessionModel", sessionModel);
 
 		return "eventDetail";
 	}

@@ -5,7 +5,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+
+	<form method="post" action="logout">
+		<p th:text="${sessionModel.simei}" style="display: inline"/>
+		<input type="submit" value="ログアウト"/>
+	</form>
+
     <h2>イベント一覧</h2>
+
+ 	<form method="post" action="/event">
+		<P><input type="submit" value="イベント追加"/></P>
+	</form>
+	<form method="post" action="/member">
+		<P><input type="submit" value="メンバー表示"/></P>
+	</form>
+
     <table class="list" border="1">
     <tr>
       <th>日付</th>
@@ -21,9 +35,6 @@
 		</td>
     </tr>
     </table>
-    
-	<form method="post" action="/event">
-		<p><input type="submit" value="イベント登録"/></p>
-	</form>
+
 </body>
 </html>

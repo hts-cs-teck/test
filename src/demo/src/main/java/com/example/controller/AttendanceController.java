@@ -17,6 +17,7 @@ import com.example.entity.Member;
 import com.example.entity.pk.EventAttendancePK;
 import com.example.entity.pk.EventCommentPK;
 import com.example.model.AttendanceModel;
+import com.example.model.SessionModel;
 import com.example.services.EventAttendanceService;
 import com.example.services.EventCommentService;
 import com.example.services.EventDateService;
@@ -25,6 +26,9 @@ import com.example.services.MemberService;
 
 @Controller
 public class AttendanceController {
+
+	@Autowired
+	protected SessionModel sessionModel;
 
 	@Autowired
 	private EventService eventService;
@@ -44,8 +48,8 @@ public class AttendanceController {
 	@RequestMapping(value = "/attendance")
 	public String index(Model model, @RequestParam Long eventId, @RequestParam Long memberId,  AttendanceModel attendanceModel)  {
 		// TODO とりあえず固定値
-		attendanceModel.setMemberid(eventId);
-		attendanceModel.setEventid(memberId);
+		attendanceModel.setMemberid(memberId);
+		attendanceModel.setEventid(eventId);
 
 		// メンバーの名前を取得
 		Member member = memberService.find(attendanceModel.getMemberid());
@@ -73,6 +77,8 @@ public class AttendanceController {
 		attendanceModel.setComment(eventComment.getComment());
 		model.addAttribute("attendance", dto);
 		model.addAttribute("eventDateList", eventDateList);
+
+		model.addAttribute("sessionModel", sessionModel);
 
 		return "attendance";
 	}
@@ -107,6 +113,8 @@ public class AttendanceController {
 
 		// コメントの登録
 		eventCommentService.save(eventComment);
+
+		model.addAttribute("sessionModel", sessionModel);
 
 		// TODO 画面遷移
 		return "forward:/attendance?eventId=" + attendanceModel.getEventid() + "&memberId=" + attendanceModel.getMemberid();
