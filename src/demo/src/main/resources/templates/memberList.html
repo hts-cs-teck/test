@@ -84,7 +84,7 @@ window.onload=function(){
 					<td th:text="${memberlist.name}"></td>
 					<td th:text="${memberlist.teamName}"></td>
 					<td>
-						<form method="post" action="/memberEdit">
+						<form method="post" th:action="@{'/memberEdit?id=' + ${memberlist.memberId}}">
 							<button style="width: 100%">編集</button>
 						</form>
 					</td>
