@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +35,19 @@ public class EventListController {
 		// 全てのイベントを取得し、各イベントの日付を取得
 		List<Event> events = eventService.findAll();
 		for (Event event : events) {
+			EventListDto dto = new EventListDto();
+
 			List<EventDate> eventDateList = eventDateService.findByEventid(event.getId());
-
+			List<Date> listDate = new ArrayList<>();
+			
 			for (EventDate eventDate : eventDateList) {
-				EventListDto dto = new EventListDto();
-				dto.setEventid(event.getId());
-				dto.setEventDate(eventDate.getDate());
-				dto.setEventName(event.getName());
-
-				list.add(dto);
+				listDate.add(eventDate.getDate());
 			}
+			dto.setEventid(event.getId());
+			dto.setEventDate(listDate);
+			dto.setEventName(event.getName());
+
+			list.add(dto);
 		}
 
 		model.addAttribute("events", list);

@@ -115,6 +115,7 @@ function addMember( dataIx ) {
     delJs.addEventListener('click', function(){
     	delMember(this.id);
     });
+    delJs.style.cssText = "width: 100%";
     delJsTd.appendChild(delJs);
 
     var delJs = document.createElement('input');

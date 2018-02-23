@@ -8,11 +8,7 @@
 <script src="js/event.js" th:src="@{/js/event.js}"></script>
 
 <body>
-
-	<form method="post" action="logout">
-		<p th:text="${sessionModel.simei}" style="display: inline"/>
-		<input type="submit" value="ログアウト"/>
-	</form>
+	<div th:replace="layout::header"></div>
 
 	<h2>メンバー編集</h2>
 	<p style="color: red" th:text="${Message}"></p>

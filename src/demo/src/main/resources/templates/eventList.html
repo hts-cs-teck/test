@@ -5,36 +5,35 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-
-	<form method="post" action="logout">
-		<p th:text="${sessionModel.simei}" style="display: inline"/>
-		<input type="submit" value="ログアウト"/>
-	</form>
+	<div th:replace="layout::header"></div>
 
     <h2>イベント一覧</h2>
 
- 	<form method="post" action="/event">
+	<form method="post" action="/event" style="display: table-cell;">
 		<P><input type="submit" value="イベント追加"/></P>
 	</form>
-	<form method="post" action="/member">
+	<form method="post" action="/member" style="display: table-cell;">
 		<P><input type="submit" value="メンバー表示"/></P>
 	</form>
 
-    <table class="list" border="1">
-    <tr>
-      <th>日付</th>
-      <th>イベント</th>
-    </tr>
-    <tr th:each="event:${events}">
-      <td th:text="${event.eventDate}">date</td>
-      <td><a th:href="@{'/eventDetail?eventid=' + ${event.eventid}}"><span th:text="${event.eventName}">name</span></a></td>
-		<td>
+	<table class="list" style="width: 80%" border="1">
+	<tr>
+	  <th style="width: 40%">イベント</th>
+	  <th style="width: 40%">日付</th>
+	  <td style="width: 10%"></td>
+	</tr>
+	<tr th:each="event:${events}">
+		<td align="center"><a th:href="@{'/eventDetail?eventid=' + ${event.eventid}}"><span th:text="${event.eventName}">name</span></a></td>
+		<td align="center">
+			<ul style="list-style:none; margin: 0 0 0 0em"><li th:each="eventDate:${event.eventDate}" th:text="${eventDate}" ></li></ul>
+		</td>
+		<td align="center">
 	      	<form method="post" th:action="@{'/event?id=' + ${event.eventid}}">
-				<input type="submit" value="編集"/>
+				<input type="submit" value="編集" style="width: 100%"/>
 			</form>
 		</td>
-    </tr>
-    </table>
+	</tr>
+	</table>
 
 </body>
 </html>

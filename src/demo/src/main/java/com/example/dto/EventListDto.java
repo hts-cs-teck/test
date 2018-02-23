@@ -2,21 +2,22 @@ package com.example.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class EventListDto implements Serializable {
 
 	/** イベントID */
 	private Long eventid;
 	/** 日付 */
-	private Date eventDate;
+	private List<Date> eventDate;
 	/** イベント名 */
 	private String eventName;
 
 
-	public Date getEventDate() {
+	public List<Date> getEventDate() {
 		return eventDate;
 	}
-	public void setEventDate(Date eventDate) {
+	public void setEventDate(List<Date> eventDate) {
 		this.eventDate = eventDate;
 	}
 	public String getEventName() {

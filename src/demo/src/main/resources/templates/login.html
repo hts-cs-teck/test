@@ -3,14 +3,36 @@
 <head>
     <title>Input</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<style type="text/css">
+
+	#login {
+	  position: absolute;
+	  top: 0px;
+	  right: 0px;
+	  bottom: 0px;
+	  left: 0px;
+	  margin: auto;
+
+	  width: 80%;
+	  height:80%;
+	}
+	</style>
+
 </head>
-<body>
-
-<form method="post" action="/loginchk">
-  <p>ユーザID：<input type="text" name="id"/></p>
-  <p>パスワード：<input type="text" name="passwd"/></p>
-  <p><input type="submit" value="ログイン"/></p>
-</form>
-
+<body >
+	<div id="login">
+		<form method="post" action="/loginchk">
+			<div style="text-align:center">
+				<table style="margin-left:auto; margin-right:auto;">
+					<tr><td>ユーザID：</td><td><input type="text" name="id"/></td></tr>
+					<tr><td>パスワード：</td><td><input type="text" name="passwd"/></td></tr>
+				</table>
+			</div>
+			<div style="text-align:center">
+				<p><input type="submit" value="ログイン"/></p>
+			</div>
+		</form>
+	</div>
 </body>
 </html>

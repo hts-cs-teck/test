@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<style type="text/css">
+.header {
+	margin-left: auto;
+	background: glay;
+
+}
+</style>
+
+</head>
+<body>
+	<div th:fragment="header" style="height: 40px; width: 100%; background: #C2EEFF">
+		<table class="list" style="height: 100%; width: 100%">
+			<tr>
+				<th align="left">イベント出欠管理</th>
+				<th style="width: 20%;" align="right">
+					<form method="post" action="logout">
+						<p th:text="${sessionModel.simei}" style="display: inline"/>
+						<input type="submit" value="ログアウト"/>
+					</form>
+				</th>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

@@ -30,13 +30,13 @@
 </head>
 
 <body>
-
-	<form method="post" action="logout">
-		<p th:text="${sessionModel.simei}" style="display: inline"/>
-		<input type="submit" value="ログアウト"/>
-	</form>
+	<div th:replace="layout::header"></div>
 
 	<h2>イベント編集</h2>
+	<form method="post" action="/eventList" style="display: table-cell; float: right">
+		<button>一覧に戻る</button>
+	</form>
+
 	<p style="color: red" th:text="${Message}"></p>
 
     <form method="post" action="/registEvent">
@@ -116,12 +116,16 @@
 
 		<p><input type="hidden" name="datelisttext" th:value="${datelisttext}"/></p>
 
-		<p>メンバ</p>
-		<table border="1">
+		<p>登録メンバ：</p>
+		<table style="width: 80%" border="1">
             <thead>
+ 				<tr>
+					<th colspan="3" align="left">登録メンバ一覧</th>
+				</tr>
                 <tr>
-                    <td>所属</td>
-                    <td>名前</td>
+                    <th style="width: 40%">所属</th>
+                    <th style="width: 40%">名前</th>
+                    <td style="width: 10%"></td>
                 </tr>
             </thead>
 			<tbody id="tablebody">
@@ -129,13 +133,13 @@
 				<td th:text="${member.team}" ></td>
 				<td th:text="${member.name}" ></td>
 				<td>
-    				<input type="button" th:id="${stat.index}" value="削除" onclick="delMember(this.id)" />
+    				<input type="button" th:id="${stat.index}" value="削除" onclick="delMember(this.id)" style="width: 100%" />
     				<input type="hidden" id="memberlist" name="memberlist" th:value="${member.name}" />
 				</td>
 			</tr>
 			</tbody>
 		</table>
-		
+
 		<p></p>
 		<table>
  			<tbody id="team">
@@ -165,18 +169,22 @@
 			</tr>
 			</tbody>
 		</table>
-		
+
 		<p>メンバ検索：
 		<input type="text" name="search" th:value="${search}" />
 		<input type="button" value="絞り込む" onclick="refine()" />
 		<input type="button" value="すべて表示" onclick="refine2()" />
 		</p>
 
-		<table border="1">
+		<table style="width: 80%" border="1">
             <thead>
+				<tr>
+					<th colspan="3" align="left">検索結果一覧</th>
+				</tr>
                 <tr>
-                    <td>所属</td>
-                    <td>名前</td>
+                    <th style="width: 40%">所属</th>
+                    <th style="width: 40%">名前</th>
+                    <td style="width: 10%"></td>
                 </tr>
             </thead>
 			<tbody id="tablebodybase">
@@ -187,7 +195,7 @@
 <!--
 					<input type="checkbox" id="memberlist" name="memberlist" th:value="${member.name}" th:checked="${member.selected==true}" onChange="fieldChanged()"/>
 -->
-					<input type="button" th:id="${stat.index}" value="追加" onclick="addMember(this.id)" />
+					<input type="button" th:id="${stat.index}" value="追加" onclick="addMember(this.id)" style="width: 100%" />
 				</td>
 			</tr>
 			</tbody>
@@ -195,8 +203,8 @@
 
 		<p><input type="submit" name="setevent" value="登録"/></p>
 	</form>
-    <form method="post" action="/eventList">
-		<p><input type="submit" value="戻る"/></p>
+    <form method="post" action="/eventList"  style="display: table-cell; float: right">
+		<p><input type="submit" value="一覧に戻る"/></p>
 	</form>
 </body>
 </html>

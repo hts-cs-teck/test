@@ -65,7 +65,10 @@ public class AttendanceController {
 		AttendanceDto dto = new AttendanceDto();
 		dto.setEventName(event.getName());
 		dto.setEventDate(eventDateList.get(0).getDate());
-		dto.setEventComment(eventComment.getComment());
+		if(eventComment.getComment() != null)
+		{
+			dto.setEventComment(eventComment.getComment());
+		}
 		dto.setMemberName(member.getName());
 		dto.setEventid(attendanceModel.getEventid());
 		dto.setMemberid(attendanceModel.getMemberid());
