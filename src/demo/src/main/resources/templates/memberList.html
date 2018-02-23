@@ -5,7 +5,7 @@
 <title>メンバー一覧</title>
 </head>
 
-<script src="js/event.js" th:src="@{/js/event.js}"></script>
+<script src="js/event.js" th:src="@{/js/member.js}"></script>
 
 <script>
 alert(${teams[0]}.name);
@@ -44,6 +44,7 @@ window.onload=function(){
 		<br />
 
 		<div>
+			<h3> メンバー検索 </h3>
 			<form method="post" action="/member">
 <!--
 				<p id="Search">
@@ -52,20 +53,28 @@ window.onload=function(){
 						value="2" />SB事業部
 				</p>
 -->
-			<p>チーム
-				<select name="steamid" id="steamid">
-					<option value=""></option>
-					<option th:each="team:${teamList}" th:value="${team.id}" th:selected="${team.id} == ${conditions.steamid}" th:inline="text">[[${team.name}]]</option>
-				</select>
-				<input type="checkbox" name="schild" id="schild" value="1" th:checked="${conditions.schild} != null"/>階層検索
+				<p>
+					<input type="submit" value="検索"/>
+					<input type="button" value="クリア" onClick="clearCondition()"/>
+				</p>
+				<p>チーム
+					<select name="steamid" id="steamid">
+						<option value=""></option>
+						<option th:each="team:${teamList}" th:value="${team.id}" th:selected="${team.id} == ${conditions.steamid}" th:inline="text">[[${team.name}]]</option>
+					</select>
+					<input type="checkbox" name="schild" id="schild" value="1" th:checked="${conditions.schild} != null"/>階層検索
 
-			</p>
+				</p>
 
-				<span> メンバー検索 <input type="text" name="sname" id="sname" />
-				</span> <span style="float: right">
-					<button>検索</button>
-				</span>
-			</form>
+				<p>メンバー
+					<input type="text" name="sname" id="sname" />
+	<!--
+					<span style="float: right">
+						<button>検索</button>
+					</span>
+	 -->
+	 			</p>
+  			</form>
 			<br /> <br />
 
 			<table style="width: 80%" border="1">
