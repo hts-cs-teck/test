@@ -141,7 +141,7 @@ public class WebController {
 				Event eventResult = eventService.find(Long.parseLong(id));
 
 				// イベント日付 登録結果の参照
-				List<EventDate> eventDateList = eventDateService.findByEventid(Long.parseLong(id));
+				List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(Long.parseLong(id));
 				List<String> strDateListResult = new ArrayList<>();
 				String strDateResult = new String();
 				List<Long> memberList = new ArrayList<>();
@@ -253,7 +253,7 @@ public class WebController {
 				String[] strEventDate = strEventDateList.split(",");
 
 				// 現在の候補日取得
-				List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+				List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(eventResult.getId());
 
 				// 新規候補日の登録
 				for(int i=0;i<strEventDate.length;i++)
@@ -383,7 +383,7 @@ public class WebController {
 			String[] memberList = eventModel.getMemberlist();
 			{
 				// 新規追加
-				List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+				List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(eventResult.getId());
 
 				for (String member : memberList) {
 					List<Member> memberListDB = memberService.findByName(member);
@@ -482,7 +482,7 @@ public class WebController {
 			}
 
 			// イベント日付 登録結果の参照
-			List<EventDate> eventDateList = eventDateService.findByEventid(eventResult.getId());
+			List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(eventResult.getId());
 			List<String> strDateListResult = new ArrayList<>();
 			String strDateResult = new String();
 			if (!eventDateList.isEmpty())

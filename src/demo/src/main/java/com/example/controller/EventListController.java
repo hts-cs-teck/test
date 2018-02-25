@@ -37,7 +37,7 @@ public class EventListController {
 		for (Event event : events) {
 			EventListDto dto = new EventListDto();
 
-			List<EventDate> eventDateList = eventDateService.findByEventid(event.getId());
+			List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(event.getId());
 			List<Date> listDate = new ArrayList<>();
 			
 			for (EventDate eventDate : eventDateList) {

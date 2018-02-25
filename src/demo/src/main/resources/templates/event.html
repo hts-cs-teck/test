@@ -47,7 +47,7 @@
 		<select name="datelist" size="5" style="width: 200px">
 			<option th:each="eventDate : ${eventDateList}" th:value="${eventDate}" th:text="${eventDate}"></option>
 		</select>
-		<input type="button" value="候補日削除" onclick="removeOption('year', 'month', 'day')" />
+		<input type="button" value="候補日削除" onclick="removeDate('year', 'month', 'day')" />
 
 		<p>候補日設定</p>
 		<div id="datepicker"></div>
@@ -112,7 +112,7 @@
 		<option value="31">31</option>
 		</select>
 
-		<input type="button" value="候補日追加" onclick="addOption('year', 'month', 'day')" />
+		<input type="button" value="候補日追加" onclick="addDate('year', 'month', 'day')" />
 
 		<p><input type="hidden" name="datelisttext" th:value="${datelisttext}"/></p>
 

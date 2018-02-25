@@ -44,7 +44,7 @@ public class EventDetailController {
 		List<Member> memberList = memberService.findAll();
 
 		// イベントに対する日付を取得
-		List<EventDate> eventDateList = eventDateService.findByEventid(eventDetailModel.getEventid());
+		List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(eventDetailModel.getEventid());
 
 		// 各メンバーの出欠、コメントを取得
 		List<EventDetailDto> eventDetailList = new ArrayList<>();

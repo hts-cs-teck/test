@@ -57,7 +57,7 @@ public class AttendanceController {
 		// イベント名を取得
 		Event event = eventService.find(attendanceModel.getEventid());
 		// イベントに対する日付を取得
-		List<EventDate> eventDateList = eventDateService.findByEventid(attendanceModel.getEventid());
+		List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(attendanceModel.getEventid());
 		// イベントに対するコメントを取得
 		EventComment eventComment = eventCommentService.findByPK(attendanceModel.getMemberid(), attendanceModel.getEventid());
 
@@ -65,7 +65,7 @@ public class AttendanceController {
 		AttendanceDto dto = new AttendanceDto();
 		dto.setEventName(event.getName());
 		dto.setEventDate(eventDateList.get(0).getDate());
-		if(eventComment.getComment() != null)
+		if(eventComment != null)
 		{
 			dto.setEventComment(eventComment.getComment());
 		}
@@ -77,7 +77,10 @@ public class AttendanceController {
 		for (EventAttendance attendance : eventAttendances) {
 			attendanceModel.getAttendances().put(attendance.getEventAttendancePK().getEventdateid(), attendance.getAttendance());
 		}
-		attendanceModel.setComment(eventComment.getComment());
+		if(eventComment != null)
+		{
+			attendanceModel.setComment(eventComment.getComment());
+		}
 		model.addAttribute("attendance", dto);
 		model.addAttribute("eventDateList", eventDateList);
 

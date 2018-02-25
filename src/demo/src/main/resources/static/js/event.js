@@ -137,15 +137,15 @@ function delMember( dataIx ) {
 
 	for( var i = 0; i < baseTbl.rows.length; i++ )
     {
-        var cells = baseTbl.rows[ i ].cells;
-        cells[2].firstChild.id=i;
+		var cells = baseTbl.rows[ i ].cells;
+		cells[2].getElementsByTagName("input")[0].id = i;
     }
 	
 	fieldChanged()
 }
 
 
-function addOption( year, month, day ) {
+function addDate( year, month, day ) {
 	var y = document.getElementsByName( year )[0].value;
 	var m = document.getElementsByName( month )[0].value;
 	var d = document.getElementsByName( day )[0].value;
@@ -170,35 +170,69 @@ function addDate(date)
 	// SELECT 要素を name で 取得
 	var target = document.getElementsByName("datelist")[0];
 
-	for (i = 0; i < target.length; i++) {
-		if (target[i].value == date) {
-			alert("該当日は追加済みです");
-			return;
+	var dateSplit = date.split("/");
+
+	var index = 0;
+	for (; index < target.length; index++) {
+		var targetSplit = target[index].value.split("/")
+
+		if(dateSplit[0] < targetSplit[0])
+		{
+			break;
+		}
+		else if(dateSplit[0] == targetSplit[0])
+		{
+			if(dateSplit[1] < targetSplit[1])
+			{
+				break;
+			}
+			else if(dateSplit[1] == targetSplit[1])
+			{
+				if(dateSplit[2] < targetSplit[2])
+				{
+					break;
+				}
+				else if(dateSplit[2] == targetSplit[2])
+				{
+					//alert("該当日は追加済みです");
+					return;
+				}
+			}
 		}
 	}
 
 	// コレクションに追加
-	target.add(option);
+	target.add(option, index);
 	// 追加した option を選択
-	target.selectedIndex = target.length-1;
+	target.selectedIndex = index;
 
 	// 隠しテキストボックスに日付文字列を追加
 	var target = document.getElementsByName("datelisttext")[0];
+	var str = "";
 	if(target.value == "")
 	{
-		target.value = date;
+		str = date;
 	}
 	else
 	{
-		target.value = target.value + "," + date;
+		var targetSplit = target.value.split(",")
+		for (i = 0; i < index; i++) {
+			str = str + targetSplit[i] + ",";
+		}
+		str = str + date;
+		for (i = index; i < targetSplit.length; i++) {
+			str = str + "," + targetSplit[i];
+			str = str;
+		}
 	}
+	target.value = str;
 
 	// ボタンの活性/非活性を切り替え
 	fieldChanged();
 }
 
 
-function removeOption() {
+function removeDate() {
 	// SELECT 要素を name で 取得
 	var target = document.getElementsByName("datelist")[0];
 	// 選択されている index を取得

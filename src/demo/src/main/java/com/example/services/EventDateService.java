@@ -36,9 +36,14 @@ public class EventDateService {
 		repository.delete(id);
 	}
 
+//	@Transactional(readOnly = true, timeout = 10)
+//	public List<EventDate> findByEventid(final Long eventid) {
+//		return repository.findByEventid(eventid);
+//	}
+
 	@Transactional(readOnly = true, timeout = 10)
-	public List<EventDate> findByEventid(final Long eventid) {
-		return repository.findByEventid(eventid);
+	public List<EventDate> findAnyCondByEventid(final Long eventid) {
+		return repository.findAnyCondByEventid(eventid);
 	}
 
 }
