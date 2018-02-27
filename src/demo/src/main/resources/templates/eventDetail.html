@@ -25,6 +25,11 @@
       <td th:text="${eventDetail.comment}"></td>
     </tr>
   </table>
+  <form method="post" action="/transitionAttendance" th:form="${eventDetailModel}">
+    <p><input type="submit" value="出欠登録"/></p>
+    <input type="hidden" name="eventid" th:value="${eventDetailModel.eventid}" />
+    <input type="hidden" name="memberid" th:value="${sessionModel.id}" />
+  </form>
   <form method="post" action="/eventList">
     <p><input type="submit" value="戻る"/></p>
   </form>

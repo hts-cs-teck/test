@@ -47,7 +47,6 @@ public class AttendanceController {
 
 	@RequestMapping(value = "/attendance")
 	public String index(Model model, @RequestParam Long eventId, @RequestParam Long memberId,  AttendanceModel attendanceModel)  {
-		// TODO とりあえず固定値
 		attendanceModel.setMemberid(memberId);
 		attendanceModel.setEventid(eventId);
 
@@ -99,7 +98,6 @@ public class AttendanceController {
 			eventAttendancePK.setMemberid(attendanceModel.getMemberid());
 			eventAttendancePK.setEventdateid(eventDateId);
 			// 出欠の設定
-			// TODO 複数日付
 			EventAttendance eventAttendance = new EventAttendance();
 			eventAttendance.setEventAttendancePK(eventAttendancePK);
 			eventAttendance.setAttendance(attendanceModel.getAttendances().get(eventDateId));
@@ -122,7 +120,7 @@ public class AttendanceController {
 
 		model.addAttribute("sessionModel", sessionModel);
 
-		// TODO 画面遷移
+		// 画面遷移
 		return "forward:/attendance?eventId=" + attendanceModel.getEventid() + "&memberId=" + attendanceModel.getMemberid();
 	}
 }

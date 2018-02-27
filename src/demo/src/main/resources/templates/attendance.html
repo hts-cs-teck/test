@@ -55,5 +55,9 @@
     <input type="hidden" name="memberid" th:value="${attendance.memberid}" />
 
     </form>
+
+    <form method="post" th:action="@{'/eventDetail?eventid=' + ${attendance.eventid}}">
+      <p><input type="submit" value="戻る"/></p>
+    </form>
 </body>
 </html>

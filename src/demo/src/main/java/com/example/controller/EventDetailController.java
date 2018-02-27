@@ -49,23 +49,27 @@ public class EventDetailController {
 		// 各メンバーの出欠、コメントを取得
 		List<EventDetailDto> eventDetailList = new ArrayList<>();
 		for (Member member : memberList) {
-			EventDetailDto dto = new EventDetailDto();
-
-			// メンバー名
-			dto.setName(member.getName());
-
-			// 出欠
+			// 出欠の取得
 			List<String> attendanceList = new ArrayList<>();
 			for (EventDate eventDate : eventDateList) {
 				EventAttendance eventAttendance = eventAttendanceService.findByPK(member.getId(), eventDate.getId());
 				if (eventAttendance != null) {
 					attendanceList.add(eventAttendance.getAttendance());
 				} else {
-					attendanceList.add("");
+					break;
 				}
 			}
-			dto.setAttendanceList(attendanceList);
+			if (attendanceList.isEmpty()) {
+				// 出欠対象のメンバーでない
+				continue;
+			}
 
+			// DTOの設定
+			EventDetailDto dto = new EventDetailDto();
+			// メンバー名
+			dto.setName(member.getName());
+			// 出欠
+			dto.setAttendanceList(attendanceList);
 			// コメント
 			EventComment eventComment = eventCommentService.findByPK(member.getId(), eventDetailModel.getEventid());
 			if (eventComment != null) {
@@ -81,5 +85,10 @@ public class EventDetailController {
 		model.addAttribute("sessionModel", sessionModel);
 
 		return "eventDetail";
+	}
+
+	@RequestMapping(value = "/transitionAttendance")
+	public String transitionAttendance(Model model, EventDetailModel eventDetailModel) {
+		return "forward:/attendance?eventId=" + eventDetailModel.getEventid() + "&memberId=" + sessionModel.getId();
 	}
 }
