@@ -5,6 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+	<div th:replace="layout::header"></div>
+
 	<p style="color: red" th:text="${Message}"></p>
 
 	<form method="post" action="/eventList">

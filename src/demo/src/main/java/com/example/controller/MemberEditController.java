@@ -95,7 +95,7 @@ public class MemberEditController {
 */
 
 	@RequestMapping(value = "/memberEdit")
-	public String EventController(Model model, MemberModel memberModel)  {
+	public String MemberController(Model model, MemberModel memberModel)  {
 		try {
 			// TODO とりあえず固定にしている
 //			List<Member> memberList = memberService.findAll();

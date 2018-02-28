@@ -62,13 +62,13 @@ public class WebController {
 			Member member = memberService.find(Long.parseLong(loginChkModel.getId()));
 			if (member == null)
 			{
-				model.addAttribute("id", loginChkModel.getId());
-				return "ng";
+				model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");
+				return "login";
 			}
 			if (!member.getPasswd().equals(loginChkModel.getPasswd()))
 			{
-				model.addAttribute("id", loginChkModel.getId());
-				return "ng";
+				model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");
+				return "login";
 			}
 			model.addAttribute("name", member.getName());
 
@@ -79,8 +79,8 @@ public class WebController {
 
 			return "forward:eventList";
 		} catch (Exception e) {
-			model.addAttribute("id", loginChkModel.getId());
-			return "ng";
+			model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");
+			return "login";
 		}
 	}
 

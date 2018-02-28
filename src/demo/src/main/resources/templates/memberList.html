@@ -79,11 +79,12 @@ window.onload=function(){
 
 			<table style="width: 80%" border="1">
 				<tr>
-					<th colspan="3" align="left">検索結果一覧</th>
+					<th colspan="4" align="left">検索結果一覧</th>
 				</tr>
 				<tr>
 					<th style="width: 40%">名前</th>
 					<th style="width: 40%">所属</th>
+					<td style="width: 10%"></td>
 					<td style="width: 10%"></td>
 				</tr>
 				<tr th:each="memberlist:${members}">
@@ -92,6 +93,11 @@ window.onload=function(){
 					<td>
 						<form method="post" th:action="@{'/memberEdit?id=' + ${memberlist.memberId}}">
 							<button style="width: 100%">編集</button>
+						</form>
+					</td>
+					<td align="center">
+				      	<form method="post" th:action="@{'/memberDelete?id=' + ${memberlist.memberId}}">
+							<input type="submit" value="削除" style="width: 100%"/>
 						</form>
 					</td>
 				</tr>
