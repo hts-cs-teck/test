@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>メンバー編集</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>メンバー編集</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <script src="js/event.js" th:src="@{/js/event.js}"></script>
@@ -13,26 +13,44 @@
 	<h2>メンバー編集</h2>
 	<p style="color: red" th:text="${Message}"></p>
 
-    <form method="post" action="/registMember">
-		<p><input type="hidden" name="id" th:field="${member.id}" /></p>
-		<p>氏名：<input type="text" name="name" th:field="${member.name}" onkeyup="fieldChanged()" onchange="fieldChanged()"/></p>
+	<form method="post" action="/registMember">
+		<p>
+			<input type="hidden" name="id" th:field="${member.id}" />
+		</p>
+		<p>
+			氏名：<input type="text" name="name" th:field="${member.name}"
+				onkeyup="fieldChanged()" onchange="fieldChanged()" />
+		</p>
+		<p>
+			社員番号：<input type="text" name="employeeid" th:field="${member.employeeid}"
+				onkeyup="fieldChanged()" onchange="fieldChanged()" />
+		</p>
+		<p>
+			パスワード：<input type="text" name="passwd" th:field="${member.passwd}"
+				onkeyup="fieldChanged()" onchange="fieldChanged()" />
+		</p>
 
-		<p>所属：
-			<select name="steamid" id="steamid">
+
+		<p>
+			所属： <select name="steamid" id="steamid">
 				<option value=""></option>
-				<option th:each="team:${teamList}" th:value="${team.id}" th:selected="${team.id} == ${conditions.steamid}" th:inline="text">[[${team.name}]]</option>
+				<option th:each="team:${teamList}" th:value="${team.id}"
+					th:selected="${team.id} == ${conditions.steamid}" th:inline="text">[[${team.name}]]</option>
 			</select>
 		</p>
-
-		<p>権限：
-		<input type="radio" name="authority" value="1"/>管理者
-		<input type="radio" name="authority" value="2"/>ユーザー
+		<p>
+			権限： <input type="radio" name="authority" value="1" />管理者 <input
+				type="radio" name="authority" value="2" />ユーザー
 		</p>
 
-		<p><input type="submit" name="setmember" value="編集完了"/></p>
+		<p>
+			<input type="submit" name="setmember" value="編集完了" />
+		</p>
 	</form>
-    <form method="post" action="/member">
-		<p><input type="submit" value="戻る"/></p>
+	<form method="post" action="/member">
+		<p>
+			<input type="submit" value="戻る" />
+		</p>
 	</form>
 </body>
 </html>

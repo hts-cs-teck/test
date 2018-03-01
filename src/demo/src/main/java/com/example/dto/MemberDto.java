@@ -4,8 +4,12 @@ import java.io.Serializable;
 
 public class MemberDto implements Serializable {
 
-	/** 社員番号 */
+	/** id */
 	private Long id;
+	/** 社員番号 */
+	private Long employeeid;
+	/** パスワード */
+	private String passwd;
 	/** 名前 */
 	private String name;
 	/** 所属 */
@@ -36,6 +40,18 @@ public class MemberDto implements Serializable {
 	}
 	public void setAuthority(String authority) {
 		this.authority = authority;
+	}
+	public String getPasswd() {
+		return passwd;
+	}
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+	public Long getEmployeeid() {
+		return employeeid;
+	}
+	public void setEmployeeid(Long employeeid) {
+		this.employeeid = employeeid;
 	}
 
 

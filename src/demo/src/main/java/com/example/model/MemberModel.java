@@ -5,8 +5,12 @@ package com.example.model;
  */
 public class MemberModel {
 
-	/** 社員番号 */
+	/** id */
 	private String id;
+	/** 社員番号 */
+	private String employeeid;
+	/** パスワード */
+	private String passwd;
 	/** 氏名 */
 	private String name;
 	/** 所属 */
@@ -44,6 +48,22 @@ public class MemberModel {
 
 	public void setAuthoritytext(String authoritytext) {
 		this.authoritytext = authoritytext;
+	}
+
+	public String getEmployeeid() {
+		return employeeid;
+	}
+
+	public void setEmployeeid(String employeeid) {
+		this.employeeid = employeeid;
+	}
+
+	public String getPasswd() {
+		return passwd;
+	}
+
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
 	}
 
 }

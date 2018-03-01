@@ -8,6 +8,8 @@ public class LoginChkModel {
 	/** ログインID */
 	private String id;
 
+	/** 社員番号 */
+	private String employeeid;
 	/** パスワード */
 	private String passwd;
 
@@ -25,6 +27,14 @@ public class LoginChkModel {
 
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
+	}
+
+	public String getEmployeeid() {
+		return employeeid;
+	}
+
+	public void setEmployeeid(String employeeid) {
+		this.employeeid = employeeid;
 	}
 
 }
