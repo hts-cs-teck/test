@@ -15,6 +15,9 @@ public class Member {
     @GeneratedValue
     private Long id;
 
+	@Column(name="employeeid")
+    private Long employeeid;
+
 	@Column(name="passwd")
 	private String passwd;
 
@@ -27,6 +30,8 @@ public class Member {
 	// getter, setter
 	public Long getId() {return id;}
 	public void setId(Long id) {this.id = id;}
+	public Long getemployeeid() {return employeeid;}
+	public void setemployeeid(Long employeeid) {this.employeeid = employeeid;}
 	public String getPasswd() {return passwd;}
 	public void setPasswd(String passwd) {this.passwd = passwd;}
 	public Long getTeamid() {return teamid;}

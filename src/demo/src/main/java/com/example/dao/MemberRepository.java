@@ -19,6 +19,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("from Member m where m.teamid = :teamid order by m.id")
 	public List<Member> findAnyCondByTeamid(@Param("teamid") Long teamid);
 
+    @Query("from Member m where m.employeeid = :employeeid order by m.id")
+	public List<Member> findAnyCondByEmployeeid(@Param("employeeid") Long employeeid);
+
     @Query("from Member m where m.name like %:name% order by m.id")
 	public List<Member> findAnyCondByName(@Param("name") String name);
 

@@ -95,7 +95,7 @@ public class MemberEditController {
 */
 
 	@RequestMapping(value = "/memberEdit")
-	public String MemberController(Model model, MemberModel memberModel)  {
+	public String EventController(Model model, MemberModel memberModel)  {
 		try {
 			// TODO とりあえず固定にしている
 //			List<Member> memberList = memberService.findAll();
@@ -110,6 +110,8 @@ public class MemberEditController {
 
 				memberDto.setId(member.getId());
 				memberDto.setName(member.getName());
+				memberDto.setEmployeeid(member.getemployeeid());
+				memberDto.setPasswd(member.getPasswd());
 				memberDto.setTeam(member.getTeamid());
 				memberDto.setAuthority(new String("2"));
 			}
@@ -146,7 +148,8 @@ public class MemberEditController {
 			{
 				member.setId(Long.parseLong(id));
 			}
-
+			member.setemployeeid(Long.parseLong(memberModel.getEmployeeid()));
+			member.setPasswd(memberModel.getPasswd());
 			member.setName(memberModel.getName());
 
 			String team = memberModel.getSteamid();

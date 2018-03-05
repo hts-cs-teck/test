@@ -59,12 +59,15 @@ public class WebController {
 	@RequestMapping(value = "/loginchk")
 	public String LoginchkController(Model model, LoginChkModel loginChkModel)  {
 		try {
-			Member member = memberService.find(Long.parseLong(loginChkModel.getId()));
-			if (member == null)
+
+			List<Member> members = memberService.findAnyCondByEmployeeid(Long.parseLong(loginChkModel.getEmployeeid()));
+		
+			if (members == null)
 			{
 				model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");
 				return "login";
 			}
+			Member member = members.get(0);
 			if (!member.getPasswd().equals(loginChkModel.getPasswd()))
 			{
 				model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");

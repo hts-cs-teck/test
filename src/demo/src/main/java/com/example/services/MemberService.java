@@ -74,6 +74,11 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true, timeout = 10)
+	public List<Member> findAnyCondByEmployeeid(final Long employeeid) {
+		return repository.findAnyCondByEmployeeid(employeeid);
+	}
+
+	@Transactional(readOnly = true, timeout = 10)
 	public List<Member> findAnyCondByTeamids(final Long teamid) {
 		Set<Long> teamids = new HashSet<Long>();
 		teamids.add(teamid);
