@@ -123,9 +123,9 @@ function addMember( dataIx ) {
     delJs.id  ='memberlist';
     delJs.name  = 'memberlist';
     delJs.value= baseName.innerHTML;
-    delJsTd.appendChild(delJs);    
-    
-    fieldChanged()
+    delJsTd.appendChild(delJs);
+
+//   fieldChanged()
 }
 
 function delMember( dataIx ) {
@@ -140,12 +140,12 @@ function delMember( dataIx ) {
 		var cells = baseTbl.rows[ i ].cells;
 		cells[2].getElementsByTagName("input")[0].id = i;
     }
-	
-	fieldChanged()
+
+//	fieldChanged()
 }
 
 
-function addDate( year, month, day ) {
+function addDate2( year, month, day ) {
 	var y = document.getElementsByName( year )[0].value;
 	var m = document.getElementsByName( month )[0].value;
 	var d = document.getElementsByName( day )[0].value;
@@ -228,7 +228,7 @@ function addDate(date)
 	target.value = str;
 
 	// ボタンの活性/非活性を切り替え
-	fieldChanged();
+	//fieldChanged();
 }
 
 
@@ -260,9 +260,9 @@ function removeDate() {
 			}
 		}
 		target.value = strNew;
-		
+
 		// ボタンの活性/非活性を切り替え
-		fieldChanged();
+		//fieldChanged();
 	}
 }
 
@@ -277,7 +277,7 @@ function refine()
 			break;
 		}
 	}
-	
+
 	var nameselect = false;
 	var re = document.getElementsByName("search")[0];
 	if(re.value != "")
@@ -291,7 +291,7 @@ function refine()
 		for( var i = 0; i < target.rows.length; i++ )
 		{
 			var cells = target.rows[ i ].cells;
-		
+
 		    var team = cells[0].innerHTML;
 
 		    var hit = false;
@@ -314,7 +314,7 @@ function refine()
 		    {
 		    	continue;
 		    }
-		    
+
 		    if(nameselect)
 		    {
 			    var name = cells[1].innerHTML;
@@ -364,14 +364,14 @@ function preset()
 			break;
 		}
 	}
-	
+
 	if(teamselect)
 	{
 		var target = document.getElementById('tablebodybase');
 		for( var i = 0; i < target.rows.length; i++ )
 		{
 			var cells = target.rows[ i ].cells;
-		
+
 		    var team = cells[0].innerHTML;
 
 		    var hit = false;
@@ -396,11 +396,11 @@ function preset()
 window.onload = function(){
 	// ページ読み込み時に実行したい処理
 	// ボタンの活性/非活性を切り替え
-	fieldChanged();
-	
+//	fieldChanged();
+
 	// メンバリストの絞り込み
 	refine();
-	
+
 	var id = document.getElementsByName("id")[0];
 	if(id.value != "")
 	{

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.dto.EventDto;
@@ -52,28 +54,30 @@ public class WebController {
 	EventAttendanceService eventAttendanceService;
 
 	@RequestMapping(value = "/login")
-	public String LoginController()  {
+	public String LoginController(LoginChkModel loginChkModel)  {
 		return "login";
 	}
 
 	@RequestMapping(value = "/loginchk")
-	public String LoginchkController(Model model, LoginChkModel loginChkModel)  {
+	public String LoginchkController(Model model, @Validated LoginChkModel loginChkModel, BindingResult result)  {
 		try {
+			if (result.hasErrors()) {
+				return "login";
+			}
 
 			List<Member> members = memberService.findAnyCondByEmployeeid(Long.parseLong(loginChkModel.getEmployeeid()));
-		
+
 			if (members == null)
 			{
-				model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");
+				model.addAttribute("Message","ユーザIDもしくはパスワードが間違っています");
 				return "login";
 			}
 			Member member = members.get(0);
 			if (!member.getPasswd().equals(loginChkModel.getPasswd()))
 			{
-				model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");
+				model.addAttribute("Message","ユーザIDもしくはパスワードが間違っています");
 				return "login";
 			}
-			model.addAttribute("name", member.getName());
 
 			sessionModel.setId(member.getId());
 			sessionModel.setSimei(member.getName());
@@ -82,7 +86,7 @@ public class WebController {
 
 			return "forward:eventList";
 		} catch (Exception e) {
-			model.addAttribute("Message","ユーザIDもしくはパスワードが不正です");
+			model.addAttribute("Message","ユーザIDもしくはパスワードが間違っています");
 			return "login";
 		}
 	}
@@ -93,50 +97,61 @@ public class WebController {
 	}
 
 	@RequestMapping(value = "/logout")
-	public String LogoutController(HttpSession session) {
+	public String LogoutController(LoginChkModel loginChkModel, HttpSession session) {
 		// dummy spring security を使うべき ...
 		session.invalidate();
 		return "login";
 	}
 
+	boolean SetDefaultList(Model model)
+	{
+		List<EventDto> eventDtoList = new ArrayList<>();
+		List<Member> memberListDB = memberService.findAll();
+		for (Member memberDB : memberListDB){
+
+			Team team = teamService.find(memberDB.getTeamid());
+			if(team == null)
+			{
+				model.addAttribute("Message","登録画面表示失敗");
+				return false;
+			}
+
+			EventDto eventDto = new EventDto();
+			eventDto.setTeam(team.getName());
+			eventDto.setName(memberDB.getName());
+//			eventDto.setSelected(hit);
+			eventDtoList.add(eventDto);
+		}
+		model.addAttribute("memberList", eventDtoList);
+
+		// 所属一覧
+		List<Team> teamList = teamService.findAll();
+		List<TeamDto> teamDtoList = new ArrayList<>();
+		if (!teamList.isEmpty())
+		{
+			for (Team team : teamList) {
+
+				TeamDto teamDto = new TeamDto();
+				teamDto.setName(team.getName());
+				teamDtoList.add(teamDto);
+			}
+		}
+		model.addAttribute("teamList", teamDtoList);
+
+		return true;
+	}
+
 	@RequestMapping(value = "/event")
-	public String EventController(Model model, EventModel eventModel)  {
+	public String EventController(Model model, EventModel eventModel, BindingResult result)  {
 		try {
+			model.addAttribute("sessionModel", sessionModel);
 			model.addAttribute("Message","");
 
-			// メンバ 登録結果の参照
-			List<EventDto> eventDtoList = new ArrayList<>();
-			List<Member> memberListDB = memberService.findAll();
-			for (Member memberDB : memberListDB){
-
-				Team team = teamService.find(memberDB.getTeamid());
-				if(team == null)
-				{
-					model.addAttribute("Message","登録画面表示失敗");
-					return "ngEvent";
-				}
-
-				EventDto eventDto = new EventDto();
-				eventDto.setTeam(team.getName());
-				eventDto.setName(memberDB.getName());
-//				eventDto.setSelected(hit);
-				eventDtoList.add(eventDto);
-			}
-			model.addAttribute("memberList", eventDtoList);
-
-			// 所属一覧
-			List<Team> teamList = teamService.findAll();
-			List<TeamDto> teamDtoList = new ArrayList<>();
-			if (!teamList.isEmpty())
+			if(!SetDefaultList(model))
 			{
-				for (Team team : teamList) {
-
-					TeamDto teamDto = new TeamDto();
-					teamDto.setName(team.getName());
-					teamDtoList.add(teamDto);
-				}
+				model.addAttribute("Message","登録画面表示失敗");
+				return "ngEvent";
 			}
-			model.addAttribute("teamList", teamDtoList);
 
 			String id = eventModel.getId();
 			if(!StringUtil.isNullOrEmpty(id))
@@ -179,6 +194,7 @@ public class WebController {
 					}
 				}
 
+				List<Member> memberListDB = memberService.findAll();
 				List<EventDto> eventDtoListSelect = new ArrayList<>();
 				for (Member memberDB : memberListDB){
 					boolean hit = false;
@@ -207,17 +223,11 @@ public class WebController {
 
 				}
 
-				model.addAttribute("event", eventResult);
+				eventModel.setName(eventResult.getName());
 				model.addAttribute("eventDateList", strDateListResult);
-				model.addAttribute("datelisttext", strDateResult);
-				model.addAttribute("memberListselect", eventDtoListSelect);
+				eventModel.setDatelisttext(strDateResult);
+				model.addAttribute("memberlistselect", eventDtoListSelect);
 			}
-			else
-			{
-				Event event = new Event();
-				model.addAttribute("event", event);
-			}
-			model.addAttribute("sessionModel", sessionModel);
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
 		}
@@ -225,8 +235,55 @@ public class WebController {
 	}
 
 	@RequestMapping(value = {"/registEvent"})
-	public String RegistEventController(Model model, EventModel eventModel)  {
+	public String RegistEventController(Model model, @Validated EventModel eventModel, BindingResult result)  {
 		try {
+			model.addAttribute("sessionModel", sessionModel);
+
+			if(!SetDefaultList(model))
+			{
+				model.addAttribute("Message","例外発生");
+				return "ngEvent";
+			}
+
+			if (result.hasErrors()) {
+				String strEventDateList = eventModel.getDatelisttext();
+				if(!StringUtil.isNullOrEmpty(strEventDateList))
+				{
+					String[] strEventDate = strEventDateList.split(",");
+					model.addAttribute("eventDateList", strEventDate);
+				}
+
+				List<EventDto> eventDtoListSelect = new ArrayList<>();
+				String[] memberList = eventModel.getMemberlist();
+				if(memberList != null && memberList.length>0)
+				{
+					for (String member : memberList) {
+						List<Member> memberListDB = memberService.findByName(member);
+						if (memberListDB.size()!=1)
+						{
+							model.addAttribute("Message","例外発生");
+							return "ngEvent";
+						}
+
+						Team team = teamService.find(memberListDB.get(0).getTeamid());
+						if(team == null)
+						{
+							model.addAttribute("Message","例外発生");
+							return "ngEvent";
+						}
+
+						EventDto eventDto = new EventDto();
+						eventDto.setTeam(team.getName());
+						eventDto.setName(memberListDB.get(0).getName());
+						eventDtoListSelect.add(eventDto);
+					}
+					model.addAttribute("memberlistselect", eventDtoListSelect);
+				}
+
+				model.addAttribute("Message","イベント編集に失敗しました");
+				return "event";
+			}
+
 			// イベントの登録or更新
 			Event event = new Event();
 			String id = eventModel.getId();
@@ -510,7 +567,6 @@ public class WebController {
 
 			// メンバ 登録結果の参照
 			List<EventDto> eventDtoListSelect = new ArrayList<>();
-			List<EventDto> eventDtoList = new ArrayList<>();
 			List<Member> memberListDB = memberService.findAll();
 			for (Member memberDB : memberListDB){
 				boolean hit = false;
@@ -537,34 +593,11 @@ public class WebController {
 					eventDtoListSelect.add(eventDto);
 				}
 
-				EventDto eventDto = new EventDto();
-				eventDto.setTeam(team.getName());
-				eventDto.setName(memberDB.getName());
-//				eventDto.setSelected(hit);
-				eventDtoList.add(eventDto);
 			}
 
-			model.addAttribute("event", eventResult);
 			model.addAttribute("eventDateList", strDateListResult);
 			model.addAttribute("datelisttext", strDateResult);
-			model.addAttribute("memberListselect", eventDtoListSelect);
-			model.addAttribute("memberList", eventDtoList);
-
-			// 所属一覧
-			List<Team> teamList = teamService.findAll();
-			List<TeamDto> teamDtoList = new ArrayList<>();
-			if (!teamList.isEmpty())
-			{
-				for (Team team : teamList) {
-
-					TeamDto teamDto = new TeamDto();
-					teamDto.setName(team.getName());
-					teamDtoList.add(teamDto);
-				}
-			}
-			model.addAttribute("teamList", teamDtoList);
-
-			model.addAttribute("sessionModel", sessionModel);
+			model.addAttribute("memberlistselect", eventDtoListSelect);
 
 			return "event";
 		} catch (Exception e) {

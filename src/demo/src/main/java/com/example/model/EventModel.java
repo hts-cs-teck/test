@@ -1,5 +1,9 @@
 package com.example.model;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * イベント画面のFormModel
  */
@@ -7,11 +11,17 @@ public class EventModel {
 
 	/** ID */
 	private String id;
+
 	/** イベント名 */
+	@NotBlank(message="イベント名を入力してください")
 	private String name;
+
 	/** 日付 */
+	@NotBlank(message="候補日を選択してください")
 	private String datelisttext;
+
 	/** メンバ */
+	@NotNull(message="メンバを選択してください")
 	private String[] memberlist;
 
 	public String getId() {
@@ -45,4 +55,5 @@ public class EventModel {
 	public void setMemberlist(String[] memberlist) {
 		this.memberlist = memberlist;
 	}
+
 }
