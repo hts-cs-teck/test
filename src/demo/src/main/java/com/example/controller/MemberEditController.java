@@ -6,9 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.dto.MemberDto;
 import com.example.dto.TeamDto;
 import com.example.entity.Member;
 import com.example.entity.Team;
@@ -94,6 +95,23 @@ public class MemberEditController {
 	}
 */
 
+	void SetDefaultList(Model model)
+	{
+		List<Team> teamList = teamService.findAll();
+		List<TeamDto> teamDtoList = new ArrayList<>();
+		if (!teamList.isEmpty())
+		{
+			for (Team team : teamList) {
+				TeamDto teamDto = new TeamDto();
+				teamDto.setId(team.getId());
+				teamDto.setParentid(team.getParentid());
+				teamDto.setName(team.getName());
+				teamDtoList.add(teamDto);
+			}
+		}
+		model.addAttribute("teamList", teamDtoList);
+	}
+
 	@RequestMapping(value = "/memberEdit")
 	public String EventController(Model model, MemberModel memberModel)  {
 		try {
@@ -101,38 +119,22 @@ public class MemberEditController {
 //			List<Member> memberList = memberService.findAll();
 //			Member member = memberList.get(0);
 
-			MemberDto memberDto = new MemberDto();
+			model.addAttribute("sessionModel", sessionModel);
+			SetDefaultList(model);
 
 			String id = memberModel.getId();
 			if(!StringUtil.isNullOrEmpty(id))
 			{
 				Member member = memberService.find( Long.parseLong( id ) );
 
-				memberDto.setId(member.getId());
-				memberDto.setName(member.getName());
-				memberDto.setEmployeeid(member.getemployeeid());
-				memberDto.setPasswd(member.getPasswd());
-				memberDto.setTeam(member.getTeamid());
-				memberDto.setAuthority(new String("2"));
+				memberModel.setName(member.getName());
+				memberModel.setEmployeeid(Long.toString(member.getemployeeid()));
+				memberModel.setPasswd(member.getPasswd());
+				memberModel.setSteamid(Long.toString(member.getTeamid()));
+				memberModel.setAuthoritytext(new String("2"));
 			}
 
-			model.addAttribute("member", memberDto);
-
-			List<Team> teamList = teamService.findAll();
-			List<TeamDto> teamDtoList = new ArrayList<>();
-			if (!teamList.isEmpty())
-			{
-				for (Team team : teamList) {
-					TeamDto teamDto = new TeamDto();
-					teamDto.setId(team.getId());
-					teamDto.setParentid(team.getParentid());
-					teamDto.setName(team.getName());
-					teamDtoList.add(teamDto);
-				}
-			}
-			model.addAttribute("teamList", teamDtoList);
 			model.addAttribute("conditions", memberModel);
-			model.addAttribute("sessionModel", sessionModel);
 		} catch (Exception e) {
 			model.addAttribute("Message","例外発生");
 		}
@@ -140,8 +142,18 @@ public class MemberEditController {
 	}
 
 	@RequestMapping(value = {"/registMember"})
-	public String RegistMemberController(Model model, MemberModel memberModel)  {
+	public String RegistMemberController(Model model, @Validated MemberModel memberModel, BindingResult result)  {
 		try {
+			model.addAttribute("sessionModel", sessionModel);
+			SetDefaultList(model);
+
+			if (result.hasErrors()) {
+				model.addAttribute("conditions", memberModel);
+
+				model.addAttribute("Message","メンバ編集に失敗しました");
+				return "memberEdit";
+			}
+
 			Member member = new Member();
 			String id = memberModel.getId();
 			if(!StringUtil.isNullOrEmpty(id))
@@ -151,11 +163,7 @@ public class MemberEditController {
 			member.setemployeeid(Long.parseLong(memberModel.getEmployeeid()));
 			member.setPasswd(memberModel.getPasswd());
 			member.setName(memberModel.getName());
-
-			String team = memberModel.getSteamid();
-			if (team != null) {
-				member.setTeamid(Long.parseLong(team));
-			}
+			member.setTeamid(Long.parseLong(memberModel.getSteamid()));
 
 			Member memberResult = memberService.save(member);
 			if (memberResult == null)

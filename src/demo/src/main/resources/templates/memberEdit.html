@@ -3,6 +3,13 @@
 <head>
 <title>メンバー編集</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<style>
+		.fieldError {
+			background-color: #ff8080;
+		}
+	</style>
+
 </head>
 
 <script src="js/event.js" th:src="@{/js/event.js}"></script>
@@ -13,35 +20,40 @@
 	<h2>メンバー編集</h2>
 	<p style="color: red" th:text="${Message}"></p>
 
-	<form method="post" action="/registMember">
+	<form method="post" th:object="${memberModel}" action="/registMember">
 		<p>
-			<input type="hidden" name="id" th:field="${member.id}" />
+			<input type="hidden" name="id" th:field="*{id}" />
 		</p>
 		<p>
-			氏名：<input type="text" name="name" th:field="${member.name}"
-				onkeyup="fieldChanged()" onchange="fieldChanged()" />
+			氏名：<input type="text" name="name" th:field="*{name}" th:errorclass="fieldError" />
 		</p>
+		<p style="color: red;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
 		<p>
-			社員番号：<input type="text" name="employeeid" th:field="${member.employeeid}"
-				onkeyup="fieldChanged()" onchange="fieldChanged()" />
+			社員番号：<input type="text" name="employeeid" th:field="*{employeeid}" th:errorclass="fieldError" />
 		</p>
+		<p style="color: red;" th:if="${#fields.hasErrors('employeeid')}" th:errors="*{employeeid}"></p>
 		<p>
-			パスワード：<input type="text" name="passwd" th:field="${member.passwd}"
-				onkeyup="fieldChanged()" onchange="fieldChanged()" />
+			パスワード：<input type="text" name="passwd" th:field="*{passwd}" th:errorclass="fieldError" />
 		</p>
+		<p style="color: red;" th:if="${#fields.hasErrors('passwd')}" th:errors="*{passwd}"></p>
 
-
 		<p>
-			所属： <select name="steamid" id="steamid">
+			所属：
+			<select name="steamid" id="steamid" th:field="*{steamid}" th:errorclass="fieldError">
 				<option value=""></option>
 				<option th:each="team:${teamList}" th:value="${team.id}"
 					th:selected="${team.id} == ${conditions.steamid}" th:inline="text">[[${team.name}]]</option>
 			</select>
 		</p>
+		<p style="color: red;" th:if="${#fields.hasErrors('steamid')}" th:errors="*{steamid}"></p>
+
+<!--
 		<p>
-			権限： <input type="radio" name="authority" value="1" />管理者 <input
-				type="radio" name="authority" value="2" />ユーザー
+			権限：
+			<input type="radio" name="authority" value="1" />管理者
+			<input type="radio" name="authority" value="2" />ユーザー
 		</p>
+ -->
 
 		<p>
 			<input type="submit" name="setmember" value="編集完了" />

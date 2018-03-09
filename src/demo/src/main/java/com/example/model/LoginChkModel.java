@@ -12,6 +12,7 @@ public class LoginChkModel {
 
 	/** ユーザID */
 	@NotBlank(message="ユーザIDを入力してください")
+	@Pattern(regexp="[0-9]*",message="ユーザIDは半角数字である必要があります")
 	private String employeeid;
 
 	/** パスワード */
