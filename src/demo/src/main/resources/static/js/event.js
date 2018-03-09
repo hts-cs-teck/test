@@ -103,12 +103,16 @@ function addMember( dataIx ) {
 
 	var teamTd = newTr.insertCell( -1 );
 	teamTd.appendChild(document.createTextNode(baseTeam.innerHTML));
+	teamTd.className='team';
 
 	var nameTd = newTr.insertCell( -1 );
 	nameTd.appendChild(document.createTextNode(baseName.innerHTML));
+	nameTd.className='name';
 
 	var delJsTd = newTr.insertCell( -1 );
-    var delJs = document.createElement('input');
+	delJsTd.className='btn';
+
+	var delJs = document.createElement('input');
     delJs.type = 'button';
     delJs.value = "削除";
     delJs.id = target.rows.length -1;

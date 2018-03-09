@@ -52,6 +52,31 @@
 		    padding: 0;
 		}
 
+		.head{
+			background:#F5A9F2;
+		}
+
+		thead.scrollHead,tbody.scrollBody{
+		  display:block;
+		}
+		tbody.scrollBody{
+		  overflow-y:scroll;
+		  height:180px;
+		}
+
+		/*幅調整*/
+		td,th{
+		  table-layout:fixed;
+		}
+		.team{
+		  width:250px;
+		}
+		.name{
+		  width:250px;
+		}
+		.btn{
+		  width:50px;
+		}
 	</style>
 
 </head>
@@ -158,22 +183,22 @@
 			<span class="box-title">メンバ</span>
 			<p style="color: red;" th:if="${#fields.hasErrors('memberlist')}" th:errors="*{memberlist}"></p>
 			<p>登録メンバ：</p>
-			<table style="width: 80%" border="1" >
-	            <thead>
-	 				<tr>
+			<table border="1">
+	            <thead class="scrollHead">
+	 				<tr class="head">
 						<th colspan="3" align="left">登録メンバ一覧</th>
 					</tr>
-	                <tr>
-	                    <th style="width: 40%">所属</th>
-	                    <th style="width: 40%">名前</th>
-	                    <td style="width: 10%"></td>
+	                <tr class="head">
+	                    <th class="team">所属</th>
+	                    <th class="name">名前</th>
+	                    <td class="btn"></td>
 	                </tr>
 	            </thead>
-				<tbody id="tablebody">
+				<tbody id="tablebody" class="scrollBody">
 				<tr th:each="member, stat : ${memberlistselect}">
-					<td th:text="${member.team}" ></td>
-					<td th:text="${member.name}" ></td>
-					<td>
+					<td th:text="${member.team}" class="team"></td>
+					<td th:text="${member.name}" class="name"></td>
+					<td class="btn">
 	    				<input type="button" th:id="${stat.index}" value="削除" onclick="delMember(this.id)" style="width: 100%" />
 	    				<input type="hidden" id="memberlist" name="memberlist" th:value="${member.name}"/>
 					</td>
@@ -217,22 +242,22 @@
 			<input type="button" value="すべて表示" onclick="refine2()" />
 			</p>
 
-			<table style="width: 80%" border="1">
-	            <thead>
-					<tr>
+			<table border="1">
+	            <thead class="scrollHead">
+					<tr class="head">
 						<th colspan="3" align="left">検索結果一覧</th>
 					</tr>
-	                <tr>
-	                    <th style="width: 40%">所属</th>
-	                    <th style="width: 40%">名前</th>
-	                    <td style="width: 10%"></td>
+	                <tr class="head">
+	                    <th class="team">所属</th>
+	                    <th class="name">名前</th>
+	                    <td class="btn"></td>
 	                </tr>
 	            </thead>
-				<tbody id="tablebodybase">
+				<tbody id="tablebodybase" class="scrollBody">
 				<tr th:each="member, stat : ${memberList}">
-					<td th:text="${member.team}"></td>
-					<td th:text="${member.name}"></td>
-					<td>
+					<td th:text="${member.team}" class="team"></td>
+					<td th:text="${member.name}" class="name"></td>
+					<td class="btn">
 	<!--
 						<input type="checkbox" id="memberlist" name="memberlist" th:value="${member.name}" th:checked="${member.selected==true}" />
 	-->
