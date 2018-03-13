@@ -125,6 +125,7 @@ public class EventListController {
 			return "forward:eventList";
 		} catch (Exception e) {
 			model.addAttribute("Message","イベント削除に失敗しました");
+			model.addAttribute("sessionModel", sessionModel);
 			return "ngEvent";
 		}
 	}

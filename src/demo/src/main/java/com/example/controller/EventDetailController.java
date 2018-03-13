@@ -47,6 +47,7 @@ public class EventDetailController {
 		List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(eventDetailModel.getEventid());
 
 		// 各メンバーの出欠、コメントを取得
+		boolean isRegist = false;
 		List<EventDetailDto> eventDetailList = new ArrayList<>();
 		for (Member member : memberList) {
 			// 出欠の取得
@@ -62,6 +63,11 @@ public class EventDetailController {
 			if (attendanceList.isEmpty()) {
 				// 出欠対象のメンバーでない
 				continue;
+			}
+
+			// 登録メンバに含まれているか
+			if (member.getId().equals(sessionModel.getId())) {
+				isRegist = true;
 			}
 
 			// DTOの設定
@@ -81,6 +87,7 @@ public class EventDetailController {
 
 		model.addAttribute("eventDateList", eventDateList);
 		model.addAttribute("eventDetailList", eventDetailList);
+		model.addAttribute("isRegist", isRegist);
 
 		model.addAttribute("sessionModel", sessionModel);
 
