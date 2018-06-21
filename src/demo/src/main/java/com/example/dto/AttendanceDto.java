@@ -7,8 +7,10 @@ public class AttendanceDto implements Serializable {
 
 	/** イベント名 */
 	private String eventName;
-	/** 日時 */
-	private Date eventDate;
+	/** 開始日時 */
+	private Date eventStartDate;
+	/** 終了日時 */
+	private Date eventEndDate;
 	/** 開催場所 */
 	private String eventPlace;
 	/** コメント */
@@ -27,11 +29,17 @@ public class AttendanceDto implements Serializable {
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
-	public Date getEventDate() {
-		return eventDate;
+	public Date getEventStartDate() {
+		return eventStartDate;
 	}
-	public void setEventDate(Date eventDate) {
-		this.eventDate = eventDate;
+	public void setEventStartDate(Date eventStartDate) {
+		this.eventStartDate = eventStartDate;
+	}
+	public Date getEventEndDate() {
+		return eventEndDate;
+	}
+	public void setEventEndDate(Date eventEndDate) {
+		this.eventEndDate = eventEndDate;
 	}
 	public String getEventPlace() {
 		return eventPlace;

@@ -63,7 +63,8 @@ public class AttendanceController {
 		// 必要な情報をDTOに詰める
 		AttendanceDto dto = new AttendanceDto();
 		dto.setEventName(event.getName());
-		dto.setEventDate(eventDateList.get(0).getDate());
+		dto.setEventStartDate(eventDateList.get(0).getStartDate());
+		dto.setEventEndDate(eventDateList.get(0).getEndDate());
 		if(eventComment != null)
 		{
 			dto.setEventComment(eventComment.getComment());

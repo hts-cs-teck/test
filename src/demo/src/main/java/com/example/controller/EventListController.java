@@ -50,13 +50,16 @@ public class EventListController {
 			EventListDto dto = new EventListDto();
 
 			List<EventDate> eventDateList = eventDateService.findAnyCondByEventid(event.getId());
-			List<Date> listDate = new ArrayList<>();
+			List<Date> listStartDate = new ArrayList<>();
+			List<Date> listEndDate = new ArrayList<>();
 
 			for (EventDate eventDate : eventDateList) {
-				listDate.add(eventDate.getDate());
+				listStartDate.add(eventDate.getStartDate());
+				listEndDate.add(eventDate.getEndDate());
 			}
 			dto.setEventid(event.getId());
-			dto.setEventDate(listDate);
+			dto.setEventStartDate(listStartDate);
+			dto.setEventEndDate(listEndDate);
 			dto.setEventName(event.getName());
 
 			list.add(dto);
@@ -81,7 +84,7 @@ public class EventListController {
 				for (EventDate eventDate : eventDateList)
 				{
 					// イベントIDが一致する
-					if(eventDate.getEventId().equals(id))
+					if(eventDate.getEventid().equals(id))
 					{
 						List<Long> memberidList = new ArrayList<>();
 

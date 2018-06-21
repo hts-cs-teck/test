@@ -20,14 +20,20 @@ public class EventDate {
 	@Column(name="eventid")
 	private Long eventid;
 
-	@Column(name="date")
-	private Date date;
+	@Column(name="startdate")
+	private Date startDate;
+
+	@Column(name="enddate")
+	private Date endDate;
 
 	// getter, setter
 	public Long getId() {return id;}
 	public void setId(Long id) {this.id = id;}
-	public Long getEventId() {return eventid;}
-	public void setEventId(Long eventid) {this.eventid = eventid;}
-	public Date getDate() {return date;}
-	public void setDate(Date date) {this.date = date;}
+	public Long getEventid() {return eventid;}
+	public void setEventid(Long eventid) {this.eventid = eventid;}
+	public Date getStartDate() {return startDate;}
+	public void setStartDate(Date startDate) {this.startDate = startDate;}
+	public Date getEndDate() {return endDate;}
+	public void setEndDate(Date endDate) {this.endDate = endDate;}
+
 }

@@ -12,6 +12,6 @@ public interface EventDateRepository extends JpaRepository<EventDate, Long> {
 
     List<EventDate> findByEventid(Long eventid);
 
-    @Query("from EventDate m where m.eventid = :eventid order by m.date")
+    @Query("from EventDate m where m.eventid = :eventid order by m.startDate")
 	public List<EventDate> findAnyCondByEventid(@Param("eventid") Long eventid);
 }

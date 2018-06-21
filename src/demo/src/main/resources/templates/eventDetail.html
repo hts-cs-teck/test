@@ -13,7 +13,9 @@
     <tr>
       <th></th>
       <th th:each="eventDate:${eventDateList}">
-        <span th:text="${eventDate.date}"></span>
+        <span th:text="${#dates.format(eventDate.startDate, 'yyyy/MM/dd HH:mm')}"></span>
+        ～<br />
+        <span th:text="${#dates.format(eventDate.endDate, 'yyyy/MM/dd HH:mm')}"></span>
       </th>
       <th>コメント</th>
     </tr>

@@ -8,17 +8,25 @@ public class EventListDto implements Serializable {
 
 	/** イベントID */
 	private Long eventid;
-	/** 日付 */
-	private List<Date> eventDate;
+	/** 開始日時 */
+	private List<Date> eventStartDate;
+	/** 終了日時 */
+	private List<Date> eventEndDate;
 	/** イベント名 */
 	private String eventName;
 
 
-	public List<Date> getEventDate() {
-		return eventDate;
+	public List<Date> getEventStartDate() {
+		return eventStartDate;
 	}
-	public void setEventDate(List<Date> eventDate) {
-		this.eventDate = eventDate;
+	public void setEventStartDate(List<Date> eventStartDate) {
+		this.eventStartDate = eventStartDate;
+	}
+	public List<Date> getEventEndDate() {
+		return eventEndDate;
+	}
+	public void setEventEndDate(List<Date> eventEndDate) {
+		this.eventEndDate = eventEndDate;
 	}
 	public String getEventName() {
 		return eventName;

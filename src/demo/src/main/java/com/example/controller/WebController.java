@@ -166,19 +166,16 @@ public class WebController {
 				if (!eventDateList.isEmpty())
 				{
 					for (EventDate eventDate : eventDateList) {
-						SimpleDateFormat formatA =
-				            new SimpleDateFormat("yyyy/MM/dd");
-						String A = formatA.format(eventDate.getDate());
-						strDateListResult.add(A);
 
+						String dateSpan = formatDateSpan(eventDate.getStartDate(), eventDate.getEndDate());
 						// 連結した文字列を保持
 						if(strDateResult.length() == 0)
 						{
-							strDateResult = A;
+							strDateResult = dateSpan;
 						}
 						else
 						{
-							strDateResult = strDateResult + "," + A;
+							strDateResult = strDateResult + "," + dateSpan;
 						}
 
 						// メンバ 登録結果の参照
@@ -320,12 +317,9 @@ public class WebController {
 				{
 					boolean hit = false;
 					for (EventDate eventDate : eventDateList) {
-						SimpleDateFormat formatA =
-				            new SimpleDateFormat("yyyy/MM/dd");
-						String A = formatA.format(eventDate.getDate());
-
+						String dateSpan = formatDateSpan(eventDate.getStartDate(), eventDate.getEndDate());
 						// 登録済み
-						if(strEventDate[i].equals(A))
+						if(strEventDate[i].equals(dateSpan))
 						{
 							hit = true;
 							continue;
@@ -339,13 +333,9 @@ public class WebController {
 
 					// 未登録のため登録
 					EventDate newEventDate = new EventDate();
-					newEventDate.setEventId(eventResult.getId());
-
-					SimpleDateFormat formatA =
-				            new SimpleDateFormat("yyyy/MM/dd");
-					Date date = formatA.parse(strEventDate[i]);
-					newEventDate.setDate(date);
-
+					newEventDate.setEventid(eventResult.getId());
+					newEventDate.setStartDate(toDateSpan(strEventDate[i])[0]);
+					newEventDate.setEndDate(toDateSpan(strEventDate[i])[1]);
 					EventDate eventDateResult = eventDateService.save(newEventDate);
 					if (eventDateResult == null)
 					{
@@ -404,15 +394,13 @@ public class WebController {
 
 				// 既存候補日の削除
 				for (EventDate eventDate : eventDateList) {
-					SimpleDateFormat formatA =
-			            new SimpleDateFormat("yyyy/MM/dd");
-					String A = formatA.format(eventDate.getDate());
+					String dateSpan = formatDateSpan(eventDate.getStartDate(), eventDate.getEndDate());
 
 					boolean hit = false;
 					for(int i=0;i<strEventDate.length;i++)
 					{
 						// 登録済み
-						if(strEventDate[i].equals(A))
+						if(strEventDate[i].equals(dateSpan))
 						{
 							hit = true;
 							continue;
@@ -548,19 +536,17 @@ public class WebController {
 			if (!eventDateList.isEmpty())
 			{
 				for (EventDate eventDate : eventDateList) {
-					SimpleDateFormat formatA =
-			            new SimpleDateFormat("yyyy/MM/dd");
-					String A = formatA.format(eventDate.getDate());
-					strDateListResult.add(A);
+					String dateSpan = formatDateSpan(eventDate.getStartDate(), eventDate.getEndDate());
+					strDateListResult.add(dateSpan);
 
 					// 連結した文字列を保持
 					if(strDateResult.length() == 0)
 					{
-						strDateResult = A;
+						strDateResult = dateSpan;
 					}
 					else
 					{
-						strDateResult = strDateResult + "," + A;
+						strDateResult = strDateResult + "," + dateSpan;
 					}
 				}
 			}
@@ -604,6 +590,30 @@ public class WebController {
 			model.addAttribute("Message","例外発生");
 			return "ngEvent";
 		}
+	}
+	public static String formatDateSpan(Date from, Date to) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		return dateFormat.format(from) + "～" + dateFormat.format(to);
+	}
+	public static Date toDate(String str) {
+		String[] formats = {
+			"yyyy/MM/dd HH:mm",
+			"yyyy/MM/dd",
+			"MM/dd",
+			"HH:mm"
+		};
+		for (String format : formats) {
+			try {
+				return (new SimpleDateFormat(format)).parse(str);
+			} catch(Exception e) {}
+		}
+		throw new IllegalArgumentException("日時形式エラー");
+	}
+	public static Date[] toDateSpan(String str) {
+		Date[] dateSpan = new Date[2];
+		dateSpan[0] = toDate(str.split("～")[0]);
+		dateSpan[1] = toDate(str.split("～")[1]);
+		return dateSpan;
 	}
 
 }

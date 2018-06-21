@@ -15,8 +15,8 @@
 
 	<script type="text/javascript">
 	$( function() {
-		// イベント時刻入力対応
 		jQuery.datetimepicker.setLocale('ja');
+		// 開始日
 	    $( "#startDate" ).datetimepicker({
 	    	timepicker:false,
 	    	format: 'Y/m/d',
@@ -32,6 +32,7 @@
 	    		$("#startTime").focus();
 	    	},
 	    });
+		// 開始時刻
 	    $( "#startTime" ).datetimepicker({
 	    	datepicker:false,
 	    	format: 'H:i',
@@ -47,6 +48,7 @@
 	    		$("#endTime").focus();
 	    	},
 	    });
+		// 終了日
 	    $( "#endDate" ).datetimepicker({
 	    	timepicker:false,
 	    	format: 'Y/m/d',
@@ -62,6 +64,7 @@
 	    		$("#endTime").focus();
 	    	},
 	    });
+		// 終了時刻
 	    $( "#endTime" ).datetimepicker({
 	    	datepicker:false,
 	    	format: 'H:i',
@@ -119,6 +122,15 @@
 	    $("#removeDate").on("click", function() {
 	    	$("#dateList option:selected").remove();
 		});
+	    $("#register").on("click", function() {
+	    	$("#datelisttext").val("");
+	    	$("#dateList option").each(function(i) {
+	    		if (i != 0) {
+	    			$("#datelisttext").val($("#datelisttext").val() + ",");
+	    		}
+	    		$("#datelisttext").val($("#datelisttext").val() + $(this).val());
+	    	});
+	    });
 	});
 	</script>
 	<style>
@@ -199,9 +211,8 @@
 
 	<p style="color: red" th:text="${Message}"></p>
 
-    <form method="post" th:object="${eventModel}" action="/registEvent">
+    <form method="post" id="registerForm" th:object="${eventModel}" action="/registEvent">
 		<p><input type="hidden" name="id" th:field="*{id}"/></p>
-
 		<div class="box">
 			<span class="box-title">イベント名</span>
 			<p>イベント名：<input type="text" name="name" th:field="*{name}" th:errorclass="fieldError"/></p>
@@ -225,6 +236,7 @@
 				<option th:each="eventDate : ${eventDateList}" th:value="${eventDate}" th:text="${eventDate}"></option>
 			</select>
 			<input type="button" value="候補日削除" id="removeDate"/>
+			<input type="hidden" id="datelisttext" name="datelisttext" th:value="${datelisttext}"/>
 
 		</div>
 
@@ -307,9 +319,6 @@
 					<td th:text="${member.team}" class="team"></td>
 					<td th:text="${member.name}" class="name"></td>
 					<td class="btn">
-	<!--
-						<input type="checkbox" id="memberlist" name="memberlist" th:value="${member.name}" th:checked="${member.selected==true}" />
-	-->
 						<input type="button" th:id="${stat.index}" value="追加" onclick="addMember(this.id)" style="width: 100%" />
 					</td>
 				</tr>
@@ -317,7 +326,7 @@
 			</table>
 		</div>
 
-		<p><input type="submit" name="setevent" value="登録"/></p>
+		<p><input type="submit" id="register" name="setevent" value="登録"/></p>
 	</form>
     <form method="post" action="/eventList"  style="display: table-cell; float: right">
 		<p><input type="submit" value="一覧に戻る"/></p>

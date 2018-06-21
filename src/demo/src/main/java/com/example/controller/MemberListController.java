@@ -162,7 +162,7 @@ public class MemberListController {
 					// イベント日付を削除
 					EventDate eventDate = eventDateService.find(eventdateid);
 					eventDateService.delete(eventdateid);
-					eventidList.add(eventDate.getEventId());
+					eventidList.add(eventDate.getEventid());
 				}
 			}
 

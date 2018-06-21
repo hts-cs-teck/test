@@ -18,15 +18,18 @@
 
 	<table class="list" style="width: 80%" border="1">
 	<tr>
-	  <th style="width: 40%">イベント</th>
-	  <th style="width: 40%">日付</th>
+	  <th style="width: 30%">イベント</th>
+	  <th style="width: 50%" colspan="2">日付</th>
 	  <td style="width: 10%"></td>
 	  <td style="width: 10%"></td>
 	</tr>
 	<tr th:each="event:${events}">
 		<td align="center"><a th:href="@{'/eventDetail?eventid=' + ${event.eventid}}"><span th:text="${event.eventName}">name</span></a></td>
-		<td align="center">
-			<ul style="list-style:none; margin: 0 0 0 0em"><li th:each="eventDate:${event.eventDate}" th:text="${eventDate}" ></li></ul>
+		<td align="right" style="border-right:none;">
+			<ul style="list-style:none; margin:0em"><li th:each="eventDate:${event.eventStartDate}" th:text="${#dates.format(eventDate, 'yyyy/MM/dd HH:mm')}" ></li></ul>
+		</td>
+		<td align="left" style="border-left:none;">
+			<ul style="list-style:none; margin:0em;padding:0px"><li th:each="eventDate:${event.eventEndDate}" th:text="${#dates.format(eventDate, '～yyyy/MM/dd HH:mm')}" ></li></ul>
 		</td>
 		<td align="center">
 	      	<form method="post" th:action="@{'/event?id=' + ${event.eventid}}">

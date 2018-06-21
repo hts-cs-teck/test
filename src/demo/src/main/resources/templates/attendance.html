@@ -15,7 +15,12 @@
       <td th:text="${attendance.eventName}">イベント名</td>
     </tr>
     <tr>
-      <td>開催日時：<span th:text="${attendance.eventDate}">YYYY/MM/DD HH:MM</span></td>
+      <td>開催日時：
+        <span th:text="${#dates.format(attendance.eventStartDate, 'yyyy/MM/dd HH:mm')}">YYYY/MM/DD HH:MM</span>
+        ～<br />
+        <span th:text="${#dates.format(attendance.eventEndDate, 'yyyy/MM/dd HH:mm')}">YYYY/MM/DD HH:MM</span>
+      </td>
+
     </tr>
     <tr>
       <td th:text="${attendance.eventPlace}">開催場所</td>
@@ -36,7 +41,11 @@
       <th>出欠</th>
     </tr>
 	<tr th:each="eventDate:${eventDateList}">
-      <td th:text="${eventDate.date}">date</td>
+      <td>
+         <span th:text="${#dates.format(eventDate.startDate, 'yyyy/MM/dd HH:mm')}">YYYY/MM/DD HH:MM</span>
+         ～<br />
+         <span th:text="${#dates.format(eventDate.endDate, 'yyyy/MM/dd HH:mm')}">YYYY/MM/DD HH:MM</span>
+	  </td>
       <td>
         <input type="radio" th:each="item : ${attendanceModel.selectAttendance}" th:field="${attendanceModel.attendances[__${eventDate.id}__]}" th:value="${item.key}" th:text="${item.value}" />
         <input type="hidden" name="eventdateid" th:value="${eventDate.id}" />
